@@ -1,0 +1,6 @@
+# Ignore paths that contain user-generated content.
+sites/*/files
+!sites/*/files/.keep
+sites/*/private
+vendor/
+backups/
