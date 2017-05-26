@@ -1,0 +1,41 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+  app:
+    depends_on:
+     - db
+    image: nemac-drupal-image:latest
+    ports:
+     - "80:80"
+    restart: always
+    volumes:
+      - .:/app
+    environment:
+      SECRETS_PATH: ''
+      ASSET_STORE: ''
+      SITE_HOSTNAME: ${PWD##*/}
+      WP_DEBUG: 'true'
+      XDEBUG: 'true'
+      ENABLE_HTTPS: 'true'
+      XDEBUG_REMOTE_HOST: '192.168.99.1'
+      ADMIN_EMAIL: ''
+      PHP_MEMORY_LIMIT: '256M'
+      PHP_POST_MAX_SIZE: '32M'
+      PHP_UPLOAD_MAX_FILESIZE: '32M'
+      PHP_MAX_EXECUTION_TIME: '60'
+      PHP_DATE_TIMEZONE: 'America/New_York'
+      S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY}'
+      S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID}'
+volumes:
+  db_data:

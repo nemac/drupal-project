@@ -1,0 +1,137 @@
+{
+  "AWSEBDockerrunVersion" : 2,
+  "volumes" : [
+    {
+      "name" : "app",
+      "host" : {
+        "sourcePath" : "/var/app/current"
+      }
+    },
+    {
+      "name" : "files",
+      "host" : {
+        "sourcePath" : "/var/app/files"
+      }
+    },
+    {
+      "name" : "secrets",
+      "host" : {
+        "sourcePath" : "/var/app/secrets"
+      }
+    },
+    {
+      "name" : "docker-socket",
+      "host" : {
+        "sourcePath" : "/var/run/docker.sock"
+      }
+    },
+    {
+      "name" : "composer-cache",
+      "host" : {
+        "sourcePath" : "/tmp/.composer"
+      }
+    }
+  ],
+  "containerDefinitions" : [
+    {
+      "name" : "app",
+      "image" : "<<<REPO URL>>>",
+      "memoryReservation" : "64",
+      "environment" : [
+        {"name" : "XDEBUG_REMOTE_HOST", "value" : "127.0.0.1"},
+        {"name" : "ADMIN_EMAIL", "value" : ""},
+        {"name" : "PHP_DATE_TIMEZONE", "value" : "America/New_York"},
+        {"name" : "COMPOSER_HOME", "value" : "/.composer"}
+      ],
+      "essential" : true,
+      "mountPoints" : [
+        {
+          "sourceVolume" : "app",
+          "containerPath" : "/app",
+          "readOnly" : false
+        },
+        {
+          "sourceVolume" : "secrets",
+          "containerPath" : "/secrets",
+          "readOnly" : true
+        },
+        {
+          "sourceVolume" : "awseb-logs-app",
+          "containerPath" : "/var/log",
+          "readOnly" : false
+        },
+        {
+          "sourceVolume" : "files",
+          "containerPath" : "/app/sites/default/files",
+          "readOnly" : false
+        },
+        {
+          "sourceVolume" : "composer-cache",
+          "containerPath" : "/.composer",
+          "readOnly" : false
+        }
+      ],
+      "portMappings" : [
+        {
+          "hostPort" : 80,
+          "containerPort" : 80
+        },
+        {
+          "hostPort" : 443,
+          "containerPort" : 443
+        }
+      ]
+    },
+    {
+      "name" : "nginx-proxy",
+      "image" : "jwilder/nginx-proxy",
+      "essential" : true,
+      "memory" : 128,
+      "portMappings" : [
+        {
+          "hostPort" : 80,
+          "containerPort" : 80
+        }
+      ],
+      "mountPoints" : [
+        {
+          "sourceVolume" : "docker-socket",
+          "containerPath" : "/tmp/docker.sock",
+          "readOnly" : true
+        },{
+          "sourceVolume" : "/etc/nginx/certs",
+          "containerPath" : "/etc/nginx/certs",
+          "readOnly" : true
+        },{
+          "sourceVolume" : "docker-socket",
+          "containerPath" : "/tmp/docker.sock",
+          "readOnly" : true
+        },{
+          "sourceVolume" : "docker-socket",
+          "containerPath" : "/tmp/docker.sock",
+          "readOnly" : true
+        }
+      ],
+      "environment" : [
+        {"name" : "LETSENCRYPT_HOST", "value" : "127.0.0.1"},
+        {"name" : "LETSENCRYPT_EMAIL", "value" : ""},
+        {"name" : "PHP_DATE_TIMEZONE", "value" : "America/New_York"},
+        {"name" : "COMPOSER_HOME", "value" : "/.composer"}
+      ]
+    }
+  ]
+}
+//$ docker run -d -p 80:80 -p 443:443 \
+//--name nginx-proxy \
+//-v /path/to/certs:/etc/nginx/certs:ro \
+//-v /etc/nginx/vhost.d \
+//-v /usr/share/nginx/html \
+//-v /var/run/docker.sock:/tmp/docker.sock:ro \
+//--label com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true \
+//jwilder/nginx-proxy
+
+//$ docker run -d \
+//-v /path/to/certs:/etc/nginx/certs:rw \
+//-v /var/run/docker.sock:/var/run/docker.sock:ro \
+//--volumes-from nginx-proxy \
+//jrcs/letsencrypt-nginx-proxy-companion

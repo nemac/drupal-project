@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+drun exec app /bin/bash

@@ -1,6 +1,13 @@
-# Ignore paths that contain user-generated content.
-sites/*/files
-!sites/*/files/.keep
-sites/*/private
+# Ignore dependency files installed by Composer
 vendor/
+# Ignore drupal core files, Track settings, private assets/files, and ensure that files directory is created.
+www/
+!www/sites/default/settings.php
+!www/sites/default/private
+!www/sites/default/files/.keep
+
+# Ignore backups folder.
 backups/
+
+# Ignore IDE files
+.idea/

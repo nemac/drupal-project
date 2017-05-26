@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+if [[ -z "$1" ]]
+then
+    echo "Usage: ./push-image version_tag\nEx: ./push-image.sh 2.01"
+    exit
+fi
+
+pushd image
+    $(aws ecr get-login --region us-east-1)
+    docker tag nemac-drupal-image:latest <<<repo url>>>:$1
+    docker push <<<repo url>>>:$1
+popd

@@ -1,11 +1,50 @@
 {
-    "require": {
-        "php": ">=5.3.0",
-        "aws/aws-sdk-php": "~3.0"
-    },
-    "config": {
-        "autoloader-suffix": "ComposerManager",
-        "vendor-dir": "./vendor"
-    },
-    "prefer-stable": true
+  "repositories" : {
+    "drupal" : {
+      "type" : "composer",
+      "url" : "https://packages.drupal.org/7"
+    }
+  },
+  "require" : {
+    "php" : ">=7.0",
+    "ext-bcmath" :"*",
+    "ext-dom" :"*",
+    "ext-gd" :"*",
+    "ext-json" :"*",
+    "ext-mbstring" :"*",
+    "ext-mcrypt" :"*",
+    "ext-mysqli" :"*",
+    "ext-openssl" :"*",
+    "ext-readline" :"*",
+    "ext-zip" :"*",
+    "composer/installers": "^1.2",
+    "cweagans/composer-patches": "^1.6",
+    "drupal-composer/drupal-scaffold": "^2.2",
+    "drupal/console": "^1.0",
+    "drupal/drupal": "^7.52",
+    "drupal/composer_manager": "^1.8",
+    "drupal/s3fs": "^2.10"
+  },
+  "config" : {
+    "autoloader-suffix" : "ComposerManager",
+    "vendor-dir" : "./vendor"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable" : true,
+  "extra" : {
+    "installer-paths" : {
+      "app" : ["type:drupal-core"],
+      "app/libraries/{$name}" : ["type:drupal-library"],
+      "app/modules/contrib/{$name}" : ["type:drupal-module"],
+      "app/profiles/contrib/{$name}" : ["type:drupal-profile"],
+      "app/themes/contrib/{$name}" : ["type:drupal-theme"],
+      "drush/{$name}" : ["type:drupal-drush"],
+      "app/modules/custom/{$name}" : ["type:drupal-custom-module"],
+      "app/themes/custom/{$name}" : ["type:drupal-custom-theme"]
+    }
+  },
+  "scripts": {
+    "post-update-cmd" : "cp drupal-additions/index.php app/",
+    "post-install-cmd" : "cp drupal-additions/index.php app/"
+  }
 }
