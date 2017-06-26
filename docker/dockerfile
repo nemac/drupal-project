@@ -11,7 +11,7 @@ COPY apache2/conf-available/ /etc/apache2/conf-available/
 COPY apache2/sites-available/ /etc/apache2/sites-available/
 COPY apache-service.sh /etc/service/apache2/run
 RUN a2enmod rewrite expires headers proxy proxy_http ssl
-RUN a2enconf security s3-proxy
+RUN a2enconf security s3-proxy vhost_app
 ENV COMPOSER_HOME="/tmp/.composer/"
 
 # Container start scripts

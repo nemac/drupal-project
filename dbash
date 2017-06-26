@@ -1,2 +1,9 @@
 #!/usr/bin/env bash
-drun exec app /bin/bash
+# Usage: ./dbash [container-name]
+# Defaults to app container.
+
+if [[ -z $1 ]]; then
+docker-compose exec app /bin/bash
+else
+docker-compose exec $1 /bin/bash
+fi

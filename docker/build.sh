@@ -2,6 +2,7 @@
 set -ex
 
 add-apt-repository ppa:ondrej/php
+add-apt-repository ppa:certbot/certbot
 apt-get update
 apt-get install -y \
     wget \
@@ -28,19 +29,22 @@ echo 'openssl.cafile="/etc/cacert.pem"' >> /etc/php-7.1.ini
 # Install composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && chmod 755 /usr/bin/composer
 
-# Install the AWSCLI
+echo "ServerName \${PROJECT_HOSTNAME}" >> /etc/apache2/apache2.conf;
+
+# Install the AWSCLI and Certbot
 apt-get install -y \
     python2.7 \
     python-pip\
     awscli\
+    python-certbot-apache \
 ;
 
 echo "
-    date.timezone = \${PHP_DATE_TIMEZONE}
-    memory_limit = \${PHP_MEMORY_LIMIT}
-    post_max_size = \${PHP_POST_MAX_SIZE}
-    upload_max_filesize = \${PHP_UPLOAD_MAX_FILESIZE}
-    max_execution_time = \${PHP_MAX_EXECUTION_TIME}
+    date.timezone = \${PHP_DATE_TIMEZONE-America/New_York}
+    memory_limit = \${PHP_MEMORY_LIMIT-512M}
+    post_max_size = \${PHP_POST_MAX_SIZE-64M}
+    upload_max_filesize = \${PHP_UPLOAD_MAX_FILESIZE-63M}
+    max_execution_time = \${PHP_MAX_EXECUTION_TIME-120}
     display_errors = Off
     error_log = \"/var/log/php.log\"
     expose_php = Off
@@ -52,7 +56,7 @@ echo "
     allow_url_fopen = On
        " >> /etc/php/7.1/apache2/php.ini
 
-#Install xdebug
+# Install xdebug
 apt-get install -y php7.1-dev
 cd /tmp/
 wget http://xdebug.org/files/xdebug-2.5.0.tgz
@@ -73,8 +77,8 @@ echo  "
     xdebug.remote_mode=req
     " >> /etc/php/7.1/apache2/php.ini
 apt-get remove -y php7.1-dev
+# END XDEBUG
 
-echo "ServerName \${SITE_HOSTNAME}" >> /etc/apache2/apache2.conf;
 
 echo "
     opcache.memory_consumption=128

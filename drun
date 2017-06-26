@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+export PWD=`pwd`
+export PROJECT_NAME=nemac
+PROJECT_HOSTNAME=${PROJECT_NAME//-/.}
+export PROJECT_HOSTNAME=${PROJECT_HOSTNAME%.*}.local
+echo HOST_${PROJECT_HOSTNAME//./_}=http://$PROJECT_HOSTNAME/ > https-proxy.env
+echo NO_SSL: 1 >> https-proxy.env
+echo PRESERVE_HOST: 'yes' >> https-proxy.env
 
 if [[ -z $1 ]]
 then
