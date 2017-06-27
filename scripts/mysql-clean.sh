@@ -5,7 +5,7 @@
 
 # Usage: dumpTable "table-name"
 dumpTable(){
-mysqldump --order-by-primary=TRUE --opt --skip-comments --protocol=tcp --compress=TRUE --default-character-set=utf8 --host=${DB_HOST} --user=${DB_USER} --skip-extended-insert --dump-date=FALSE --replace=TRUE --port=${DB_PORT} --password=${DB_PASSWORD} --skip-triggers --quick "${DB_DATABASE}" "$1" | sed 's$VALUES ($VALUES\n($g' | sed 's$),($),\n($g' > "data/${1}.sql"
+mysqldump --order-by-primary=TRUE --opt --skip-comments --protocol=tcp --compress=TRUE --default-character-set=utf8 --host=${DB_HOST} --user=${DB_USER} --skip-extended-insert --dump-date=FALSE --replace=TRUE --port=${DB_PORT} --password=${DB_PASSWORD} --skip-triggers --quick "${DB_DATABASE}" "$1"
 }
 
 echo "Attempted to clean: $1"
