@@ -2,6 +2,8 @@
 
 set -x
 
+
+
 #Download secrets and run certbot.
 if [[ ! -z "$SECRETS_STORE" ]]; then
  echo "No SECRETS_STORE. Skipping HTTPS."
@@ -39,10 +41,4 @@ certbot certonly -n --apache --keep --allow-subset-of-names -d ${PROJECT_HOSTNAM
 
 echo "52 0,12 * * * root certbot renew -n && aws s3 sync /secrets ${SECRETS_STORE} --no-follow-symlinks" > /etc/cron.d/certbot
 
-if [[ $FORCE_HTTPS = true ]]; then
-a2dissite http --quiet
-a2ensite http_redirect --quiet
-else
-a2dissite http_redirect --quiet
-a2ensite http --quiet
-fi
+

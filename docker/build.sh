@@ -40,11 +40,11 @@ apt-get install -y \
 ;
 
 echo "
-    date.timezone = \${PHP_DATE_TIMEZONE-America/New_York}
-    memory_limit = \${PHP_MEMORY_LIMIT-512M}
-    post_max_size = \${PHP_POST_MAX_SIZE-64M}
-    upload_max_filesize = \${PHP_UPLOAD_MAX_FILESIZE-63M}
-    max_execution_time = \${PHP_MAX_EXECUTION_TIME-120}
+    date.timezone = \${PHP_DATE_TIMEZONE}
+    memory_limit = \${PHP_MEMORY_LIMIT}
+    post_max_size = \${PHP_POST_MAX_SIZE}
+    upload_max_filesize = \${PHP_UPLOAD_MAX_FILESIZE}
+    max_execution_time = \${PHP_MAX_EXECUTION_TIME}
     display_errors = Off
     error_log = \"/var/log/php.log\"
     expose_php = Off

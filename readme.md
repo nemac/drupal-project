@@ -34,4 +34,6 @@ FORCE_HTTPS|true\|false|Enables http redirect (301) to https and turns on HSTS.
 ENABLE_XDEBUG|true\|false|Enables xdebug. Do not enable XDEBUG in production. See: [debugging](#debugging).
 XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this will be the ip of the host machine, for staging it will be `127.0.0.1` and ssh port forwarding should be used. Do not enable XDEBUG in production.
 
+### Gotchas
 
+- If you encounter errors about files not existing in `/vendor`, destroy it, then re-run the build. Do not attempt to troubleshoot permissions.
