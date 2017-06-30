@@ -13,7 +13,7 @@ alias build-image="`pwd`/scripts/build-image.sh"
 alias push-image="`pwd`/scripts/push-image.sh"
 
 echo -e "Utility Commands:"
-echo -e "  drun - list Docker containers"
+echo -e "  drun - Run local Docker container"
 echo -e "  dps - list running Docker containers"
 echo -e "  dbash - connect to running app container"
 echo -e "  dlog - view running app container's stdouterr output"

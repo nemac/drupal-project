@@ -7,6 +7,7 @@ if [[ ! -z "$SECRETS_STORE" ]]; then
  echo "No SECRETS_STORE. Skipping HTTPS."
  exit 0
 fi
+
 aws s3 sync ${SECRETS_STORE} /secrets;
 
 if [[ ! "$ENABLE_HTTPS" = true ]]; then
@@ -35,7 +36,7 @@ cnames="$cnames -d $cname"
 done
 
 # Run certbot, get cert only, non-interactive mode, use apache for challenge, keep existing certs if they have not yet expired, don't fail entirely if some domains don't work
-certbot certonly -n --apache --keep --allow-subset-of-names -d ${PROJECT_HOSTNAME} ${cnames} --email ${ADMIN_EMAIL} --agree-tos\
+certbot certonly -n --apache --keep --allow-subset-of-names -d ${PROJECT_HOSTNAME} ${cnames} --email ${ADMIN_EMAIL} --agree-tos \
   && aws s3 sync /secrets ${SECRETS_STORE} --no-follow-symlinks
 
 echo "52 0,12 * * * root certbot renew -n && aws s3 sync /secrets ${SECRETS_STORE} --no-follow-symlinks" > /etc/cron.d/certbot
