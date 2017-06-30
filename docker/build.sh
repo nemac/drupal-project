@@ -45,7 +45,7 @@ echo "
     post_max_size = \${PHP_POST_MAX_SIZE}
     upload_max_filesize = \${PHP_UPLOAD_MAX_FILESIZE}
     max_execution_time = \${PHP_MAX_EXECUTION_TIME}
-    display_errors = Off
+    display_errors = \${ENABLE_DEBUGGING}
     error_log = \"/var/log/php.log\"
     expose_php = Off
     html_errors = Off
@@ -69,7 +69,7 @@ cp modules/xdebug.so /usr/lib/php/20160303
 
 echo  "
     zend_extension = /usr/lib/php/20160303/xdebug.so
-    xdebug.enabled=\${XDEBUG}
+    xdebug.enabled=\${ENABLE_DEBUGGING}
     xdebug.remote_enable=1
     xdebug.remote_host=\${XDEBUG_REMOTE_HOST}
     xdebug.remote_autostart=1
@@ -78,7 +78,6 @@ echo  "
     " >> /etc/php/7.1/apache2/php.ini
 apt-get remove -y php7.1-dev
 # END XDEBUG
-
 
 echo "
     opcache.memory_consumption=128

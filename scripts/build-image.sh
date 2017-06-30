@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pushd docker
+pushd ../docker
 
 docker build . -t nemac-drupal-image "$@"
 popd

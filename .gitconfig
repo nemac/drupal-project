@@ -1,3 +1,0 @@
-[filter "mysql"]
-	clean = scripts/mysql-clean.sh %f
-	smudge = scripts/mysql-smudge.sh %f
