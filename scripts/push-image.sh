@@ -7,8 +7,6 @@ then
     exit
 fi
 
-pushd ../image
-    $(aws ecr get-login --region us-east-1)
-    docker tag nemac-drupal-image:latest 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1
-    docker push 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1
-popd
+$(aws ecr get-login --region us-east-1)
+docker tag nemac-drupal-image:latest 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1
+docker push 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1

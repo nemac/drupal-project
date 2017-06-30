@@ -35,7 +35,7 @@
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "<<<REPO URL>>>",
+      "image": "arn:aws:ecr:us-east-1:104538610210:repository/nemac-drupal:1.00",
       "memoryReservation": "64",
       "environment": [
         {"name": "XDEBUG_REMOTE_HOST", "value": "127.0.0.1"},
@@ -76,41 +76,6 @@
           "hostPort": 80,
           "containerPort": 80
         }
-      ]
-    },
-    {
-      "name": "nginx-proxy",
-      "image": "jwilder/nginx-proxy",
-      "essential": true,
-      "memory": 128,
-      "portMappings": [
-        {
-          "hostPort": 443,
-          "containerPort": 443
-        }
-      ],
-      "mountPoints": [
-        {
-          "sourceVolume": "docker-socket",
-          "containerPath": "/tmp/docker.sock",
-          "readOnly": true
-        },
-        {
-          "sourceVolume": "/etc/nginx/certs",
-          "containerPath": "/etc/nginx/certs",
-          "readOnly": true
-        },
-        {
-          "sourceVolume": "docker-socket",
-          "containerPath": "/tmp/docker.sock",
-          "readOnly": true
-        }
-      ],
-      "environment": [
-        {"name": "LETSENCRYPT_HOST", "value": "127.0.0.1"},
-        {"name": "LETSENCRYPT_EMAIL", "value": ""},
-        {"name": "PHP_DATE_TIMEZONE", "value": "America/New_York"},
-        {"name": "COMPOSER_HOME", "value": "/.composer"}
       ]
     }
   ]
