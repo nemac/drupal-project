@@ -34,7 +34,7 @@ Run `source utils.sh` to load utility commands.
 * **push-image** - Pushes the docker image to the image repository with the provided tag.
 
 ### Configuration
-The below environment variables may be configured in `docker-compose.yml`(for dev environment), `Dockerrun.aws.json`(for staging and production), and/or via the Elastic Beanstalk environment configuration. Elastic Beanstalk environment variables overwrite those defined in `Dockerrun.aws.json`.
+The below environment variables may be configured in `docker-compose.yml`(for dev environment), `Dockerrun.aws.json`(for staging and production), and/or via the Elastic Beanstalk environment configuration. Elastic Beanstalk environment variables overwrite those defined in `Dockerrun.aws.json`, using this you can change variables on a running environment without pushing new code.
 
  Name | Type | Description
  :--- | :--- | :---
@@ -47,6 +47,32 @@ ENABLE_HTTPS | true\|false | Enables https and certbot.
 FORCE_HTTPS | true\|false | Enables http redirect (301) to https and turns on HSTS.
 ENABLE_DEBUGGING | true\|false | Enables error printing, xdebug, and more. Do not enable in production. See: [debugging](#debugging).
 XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this will be the ip of the docker-machine, for staging it will be `127.0.0.1` and ssh port forwarding should be used. Do not enable in production.
+
+
+## Local Development
+
+### Setup
+
+### Usage
+
+
+### Utility Commands
+Run `source utils.sh` to load utility commands.
+
+* **drun** - Runs the local development environment. (usually preceded by `image-build`)
+* **dps** - Lists running docker containers.
+* **dlog** - Shows log output from current running app container.
+* **dbash** - Interactive terminal in running app container.
+* **build-image** - Build the docker image locally.
+* **push-image** - Pushes the docker image to the image repository with the provided tag.
+
+
+
+### <span id="debugging"></span> Debugging
+
+
+### SSH
+Adding your public key in `.ebextensions/keys.config` where indicated will allow you to ssh into instances using `ssh ec2-user@instancehostname`. Once connected logs can be found in `/var/log/`, deployed application source is visible at `/var/app/current/` and running `dbash` will get you an interactive terminal in the current running app container. `dps` gives some stats on how long it has been running.
 
 ### Gotchas
 

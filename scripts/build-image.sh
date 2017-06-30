@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
-pushd ../docker
+DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+pushd $DIR/../docker
 
 docker build . -t nemac-drupal-image "$@"
 popd

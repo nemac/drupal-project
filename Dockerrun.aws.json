@@ -20,12 +20,6 @@
       }
     },
     {
-      "name": "docker-socket",
-      "host": {
-        "sourcePath": "/var/run/docker.sock"
-      }
-    },
-    {
       "name": "composer-cache",
       "host": {
         "sourcePath": "/tmp/.composer"
@@ -75,6 +69,10 @@
         {
           "hostPort": 80,
           "containerPort": 80
+        },
+        {
+          "hostPort": 443,
+          "containerPort": 443
         }
       ]
     }
