@@ -45,7 +45,7 @@
         {"name": "PHP_DATE_TIMEZONE", "value": "America/New_York"},
         {"name": "COMPOSER_HOME", "value": "/.composer"}
       ],
-      "essential": false,
+      "essential": true,
       "mountPoints": [
         {
           "sourceVolume": "app",
