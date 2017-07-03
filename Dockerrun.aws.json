@@ -29,7 +29,7 @@
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "arn:aws:ecr:us-east-1:104538610210:repository/nemac-drupal:1.00",
+      "image": "104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal",
       "memoryReservation": "64",
       "environment": [
         {"name": "PHP_MEMORY_LIMIT", "value": "512M"},
