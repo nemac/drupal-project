@@ -41,7 +41,6 @@
         {"name": "ENABLE_HTTPS", "value": "false"},
         {"name": "ADMIN_EMAIL", "value": "jwilson@waystone.systems"},
         {"name": "XDEBUG_REMOTE_HOST", "value": "127.0.0.1"},
-        {"name": "ADMIN_EMAIL", "value": ""},
         {"name": "PHP_DATE_TIMEZONE", "value": "America/New_York"},
         {"name": "COMPOSER_HOME", "value": "/.composer"}
       ],
