@@ -5,16 +5,19 @@
 set -x
 set +e
 
-#Fixes shared folder uid:gid issues.
+#Fixes shared folder permission issues.
+if [[ `stat -c "%u" /app` != 0 ]]; then
+#By changing www-data's uid we avoid having to chown all files /app
 usermod --non-unique --uid `stat -c "%u" /app` www-data
+else
+#Root owns the folder, best to just chown.
+chown www-data:www-data /app -R
+chown www-data:www-data /.composer
+fi;
 
 # Apache fails to start if the log directory doesn't exist.
 mkdir -p /var/log/apache2
 chown www-data:www-data /var/log/apache2
-
-# Just doing this to ensure our permissions will work.
-# TODO This could be removed if Drupal would stop changing permissions on files.
-#chown www-data:www-data /app
 
 #run composer install
 su -s "/bin/bash" -c "cd /app/ && composer install" www-data

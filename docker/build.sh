@@ -34,8 +34,8 @@ echo "ServerName \${PROJECT_HOSTNAME}" >> /etc/apache2/apache2.conf;
 # Install the AWSCLI and Certbot
 apt-get install -y \
     python2.7 \
-    python-pip\
-    awscli\
+    python-pip \
+    awscli \
     python-certbot-apache \
 ;
 
