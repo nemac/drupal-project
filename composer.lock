@@ -1341,16 +1341,16 @@
         },
         {
             "name": "drupal/console-extend-plugin",
-            "version": "0.9.0",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hechoendrupal/drupal-console-extend-plugin.git",
-                "reference": "b3a61614c5ba7dc3dcd8d2bff35dd965822aed87"
+                "reference": "ae2a76680f93c0fea31bbcafc6b0bcc234bb2fb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hechoendrupal/drupal-console-extend-plugin/zipball/b3a61614c5ba7dc3dcd8d2bff35dd965822aed87",
-                "reference": "b3a61614c5ba7dc3dcd8d2bff35dd965822aed87",
+                "url": "https://api.github.com/repos/hechoendrupal/drupal-console-extend-plugin/zipball/ae2a76680f93c0fea31bbcafc6b0bcc234bb2fb4",
+                "reference": "ae2a76680f93c0fea31bbcafc6b0bcc234bb2fb4",
                 "shasum": ""
             },
             "require": {
@@ -1378,7 +1378,7 @@
                 }
             ],
             "description": "Drupal Console Extend Plugin",
-            "time": "2017-07-04T01:55:20+00:00"
+            "time": "2017-07-07T05:12:50+00:00"
         },
         {
             "name": "drupal/core",
