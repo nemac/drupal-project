@@ -3,7 +3,6 @@
 # This script is run when the container is first started.
 #
 set -x
-set +e
 
 #Fixes shared folder permission issues.
 if [[ `stat -c "%u" /app` != 0 ]]; then
@@ -12,12 +11,8 @@ usermod --non-unique --uid `stat -c "%u" /app` www-data
 else
 #Root owns the folder, best to just chown.
 chown www-data:www-data /app -R
-chown www-data:www-data /.composer
 fi;
 
 # Apache fails to start if the log directory doesn't exist.
 mkdir -p /var/log/apache2
 chown www-data:www-data /var/log/apache2
-
-#run composer install
-su -s "/bin/bash" -c "cd /app/ && composer install" www-data

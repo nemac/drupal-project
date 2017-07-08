@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# This script is run when the container is first started.
+#
 
 set -x
 
