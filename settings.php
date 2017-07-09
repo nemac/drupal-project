@@ -740,6 +740,7 @@ $databases['default']['default'] = [
   'username' => $_ENV['DRUPAL_DB_USERNAME'],
   'password' => $_ENV['DRUPAL_DB_PASSWORD_DECRYPTED'],
   'driver' => 'mysql',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'prefix' => '',
 ];
 

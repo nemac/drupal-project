@@ -54,7 +54,7 @@
         {
           "sourceVolume": "secrets",
           "containerPath": "/secrets",
-          "readOnly": true
+          "readOnly": false
         },
         {
           "sourceVolume": "awseb-logs-app",
