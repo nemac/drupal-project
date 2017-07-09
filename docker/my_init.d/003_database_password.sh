@@ -8,12 +8,12 @@
 # soft fail if we simply don't have a password.
 if [[ -z "${DRUPAL_DB_PASSWORD}" ]]; then
   echo "DRUPAL_DB_PASSWORD not set, skipping decryption."
-  exit 0
+  exit 1
 fi
 # hard fail if we have a password, but not the other required variables.
 if [[ -z "${DRUPAL_DB_NAME}" || -z "${APPLICATION}" ]]; then
   echo "DRUPAL_DB_NAME or APPLICATION not set, decryption failed."
-  exit 0
+  exit 1
 fi
 
 PASS=$(\
@@ -25,7 +25,7 @@ PASS=$(\
 
 if [[ -z "${PASS}" ]]; then
   echo "Decryption failed, missing value."
-  exit 0;
+  exit 1
 fi
 
-echo "export DRUPAL_DB_PASSWORD_DECRYPTED=${PASS}" >> /etc/apache2/envvars
+echo "export DRUPAL_DB_PASSWORD_DECRYPTED=${PASS}" >> /etc/profile.d/drupal_db_password_decrypted.sh
