@@ -38,8 +38,8 @@ The below environment variables may be configured in `docker-compose.yml`(for de
 
  Name | Type | Description
  :--- | :--- | :---
-PROJECT_HOSTNAME | Hostname | The primary hostname for this environment. Ex: 'some.project.com' 
-PROJECT_CNAMES | Hostnames | Additional hostnames for which https certificates should be registered (comma-seperated).
+PRIMARY_DOMAIN | Hostname | The primary domain name for this environment. Ex: 'some.project.com' 
+ALTERNATE_DOMAINS | Hostnames | Additional domain names/CNAMES for which https certificates should be registered (comma-seperated).
 ADMIN_EMAIL | Email | The email used to register ssl certs. May receive ssl cert expiry notices.
 SECRETS_STORE | S3 bucket/prefix | The S3 bucket and prefix in which the secrets for this environment are stored. Ex: 's3://nemac-secrets/staging-some-project-com/')
 ASSET_STORE | S3 bucket/prefix | The S3 bucket and prefix in which the assets for this environment are stored. Ex: 's3://nemac-assets-us-east-1/some-project-com/')
@@ -53,7 +53,7 @@ XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this
 
 
 (defaults to drupal.localhost)
-Add `127.0.0.1 PROJECT_HOSTNAME` to your hosts for local development.
+Add `127.0.0.1 PRIMARY_DOMAIN` to your hosts for local development.
 
 ### Setup
 

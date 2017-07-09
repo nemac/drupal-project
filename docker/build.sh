@@ -29,7 +29,7 @@ echo 'openssl.cafile="/etc/cacert.pem"' >> /etc/php-7.1.ini
 # Install composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && chmod 755 /usr/bin/composer
 
-echo "ServerName \${PROJECT_HOSTNAME}" >> /etc/apache2/apache2.conf;
+echo "ServerName \${PRIMARY_DOMAIN}" >> /etc/apache2/apache2.conf;
 
 # Install the AWSCLI and Certbot
 apt-get install -y \

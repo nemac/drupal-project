@@ -26,15 +26,15 @@ if [[ -z "${PASS}" ]]; then
 fi
 
 PASS=$(\
- aws kms decrypt --output "text" --query CiphertextBlob \
+ aws kms decrypt --output text --query Plaintext \
   --encryption-context "Application=${APPLICATION},Database=${DRUPAL_DB_NAME}"\
-  --ciphertext-blob "${DRUPAL_DB_PASSWORD}" \
+  --ciphertext-blob fileb://<(echo "${DRUPAL_DB_PASSWORD}" | base64 -d) \
   | base64 -di - \
  )
 
 if [[ -z "${PASS}" ]]; then
   echo "Decryption failed."
-  exit 1;
+  exit 0;
 fi
 
 echo "export DRUPAL_DB_PASSWORD=${PASS}" >> /etc/apache2/envvars

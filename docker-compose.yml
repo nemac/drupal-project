@@ -30,11 +30,11 @@ services:
       PHP_POST_MAX_SIZE: '64M'
       PHP_UPLOAD_MAX_FILESIZE: '64M'
       PHP_MAX_EXECUTION_TIME: '120'
-      PROJECT_HOSTNAME: 'drupal.localhost'
+      PRIMARY_DOMAIN: 'drupal.localhost'
       ENABLE_DEBUGGING: 'true'
       ENABLE_HTTPS: 'false'
       XDEBUG_REMOTE_HOST: '192.168.99.1'
-      ADMIN_EMAIL: 'admin@${PROJECT_HOSTNAME}'
+      ADMIN_EMAIL: 'admin@${PRIMARY_DOMAIN}'
       S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY}'
       S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID}'
 volumes:
