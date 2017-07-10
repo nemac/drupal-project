@@ -22,6 +22,7 @@
         "drupal/config_installer": "^1.4",
         "drupal/console": "~1.0",
         "drupal/core": "~8.0",
+        "drupal/features": "^3.5",
         "drupal/s3fs": "^3.0@alpha",
         "drush/drush": "~8.0",
         "webflo/drupal-finder": "^0.3.0",
@@ -51,6 +52,7 @@
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "settings-shim":"chmod 660 web/sites/default/settings.php && echo \"<?php require(\$app_root . '/settings.php');\" > web/sites/default/settings.php",
         "pre-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion",
             "mkdir -p web/core web/libraries web/modules/contrib web/profiles/contrib web/themes/contrib drush/contrib"
@@ -61,12 +63,12 @@
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "@drupal-scaffold",
-            "mkdir -p web/sites/default/ && cp -f settings.php web/sites/default/settings.php"
+            "@settings-shim"
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "@drupal-scaffold",
-            "mkdir -p web/sites/default/ && cp -f settings.php web/sites/default/settings.php"
+            "@settings-shim"
         ]
     },
     "extra": {

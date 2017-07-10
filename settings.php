@@ -763,6 +763,8 @@ $settings['file_scan_ignore_directories'] = [
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
+$setttings['skip_permissions_hardening']=true;
+
 $databases['default']['default'] = array (
   'database' => getenv('DRUPAL_DB_NAME'),
   'username' => getenv('DRUPAL_DB_USERNAME'),
