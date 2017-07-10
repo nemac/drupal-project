@@ -22,7 +22,6 @@ This project provides scaffolding to build a containerized Drupal webserver.
 
 ### Usage
 
-
 ### Utility Commands
 Run `source utils.sh` to load utility commands.
 
@@ -52,12 +51,10 @@ XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this
 ## Local Development
 
 
-(defaults to drupal.local)
 Add `127.0.0.1 PRIMARY_DOMAIN` to your hosts for local development.
 
 ### Setup
-
-### Usage
+<!-- TODO document docker setup -->
 
 
 ### Utility Commands
@@ -74,7 +71,7 @@ Run `source utils.sh` to load utility commands.
 * **push-image** - Pushes current local development image to AWS ECR repository with the specified version tag.
 
 ### <span id="debugging"></span> Debugging
-
+Setting `ENABLE_DEBUGGING` in `docker-compose.yml` (for local), `Dockerrun.aws.json` (for all remotes), or using CloudFormation (for a specific stack) will turn on XDEBUG (for which you will need a debugging client)
 
 ### SSH
 Adding your public key in `.ebextensions/keys.config` where indicated will allow you to ssh into instances using `ssh ec2-user@instancehostname`. Once connected, logs can be found in `/var/log/`, deployed application source is visible at `/var/app/current/` and running `dbash` will get you an interactive terminal in the current running app container. `dps` gives some stats on how long it has been running. If no container is running `dps` will show only the "ecs-agent" container, at which point logs from failed containers can be found in `/var/log/containers`.
@@ -93,6 +90,5 @@ Adding your public key in `.ebextensions/keys.config` where indicated will allow
 
 # TODO register drupal CRON
 # TODO register ssl cert renewal CRON
-# TODO Setup caching engine
 # TODO encrypt hash salts using KMS
 # TODO encrypt ssl certs using KMS data keys
