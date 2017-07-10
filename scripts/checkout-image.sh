@@ -9,6 +9,6 @@ fi
 
 set -ex
 
-$(aws ecr get-login --region us-east-1)
+$(aws ecr get-login --region us-east-1 --no-include-email)
 docker pull nemac-drupal-image:latest 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1
-docker tag 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1 nemac-drupal:latest
+docker tag 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1 nemac-drupal-image:latest

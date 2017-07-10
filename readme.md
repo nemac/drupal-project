@@ -58,17 +58,25 @@ Add `127.0.0.1 PRIMARY_DOMAIN` to your hosts for local development.
 
 
 ### Utility Commands
-Run `source utils.sh` to load utility commands.
+Run `source commands.sh` to load utility commands.
 
-* **drun** - Runs the local development environment. (usually preceded by `image-build`)
-* **dps** - Lists running docker containers.
-* **dlog** - Shows log output from current running app container.
-* **dbash** - Interactive terminal in running app container.
-* **drush** - Runs `drush` in running app container.
-* **composer** - Runs `composer` in running app container.
-* **build-image** - Build the docker image locally.
-* **checkout-image** - Pulls specified docker image version from the ECR repository and tags it for use in local development environment.
-* **push-image** - Pushes current local development image to AWS ECR repository with the specified version tag.
+**Image management commands:**
+  **build-image** - build the docker image for local use
+  **checkout-image** - build the docker image for local use
+  **push-image** - Pushes current local development image to AWS ECR repository with the specified version tag.
+**Local development container commands:**
+  **drun** - list Docker containers
+  **dps** - list running Docker containers
+  **dbash** - open a terminal in running app container
+  **dlog** - view running app container's stdouterr output
+  **dtail** - follow running app container's stdouterr output
+  **alog** - view running app container's apache2 error log
+  **atail** - follow running app container's error log
+**Utility commands:**
+  **drush** - Runs \`drush\` in running app container.
+  **composer** - Runs \`composer\` in running app container.
+  **sql-dump** - Runs \`drush sql-dump\` in running app container.
+  **sql-import** - Imports sql dump from file using drush.
 
 ### <span id="debugging"></span> Debugging
 Setting `ENABLE_DEBUGGING` in `docker-compose.yml` (for local), `Dockerrun.aws.json` (for all remotes), or using CloudFormation (for a specific stack) will turn on XDEBUG (for which you will need a debugging client)
