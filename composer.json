@@ -61,12 +61,12 @@
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "@drupal-scaffold",
-            "cp -f settings.php sites/default/settings.php"
+            "mkdir -p web/sites/default/ && cp -f settings.php web/sites/default/settings.php"
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
             "@drupal-scaffold",
-            "cp -f settings.php sites/default/settings.php"
+            "mkdir -p web/sites/default/ && cp -f settings.php web/sites/default/settings.php"
         ]
     },
     "extra": {

@@ -802,8 +802,8 @@ if (!empty(getenv('ASSET_STORE'))) {
   $config['s3fs.settings']['presigned_urls'] = "";
   $config['s3fs.settings']['public_folder'] = 'public';
   $config['s3fs.settings']['private_folder'] = 'private';
-  $settings['s3fs.use_s3_for_private'] = true;
-  $settings['s3fs.use_s3_for_public'] = true;
+  $settings['s3fs.use_s3_for_private'] = false;
+  $settings['s3fs.use_s3_for_public'] = false;
 }
 $settings['php_storage']['twig']['directory'] = '../twig/';
 
