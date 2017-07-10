@@ -3,7 +3,7 @@ FROM phusion/baseimage:0.9.21
 VOLUME /app
 VOLUME /secrets
 
-# Install Apache, PHP, and some other tools we need
+# Install Apache, PHP, Python, the AWS CLI and some other tools we need
 COPY build.sh /build/build.sh
 RUN /build/build.sh
 # Apache configuration
@@ -12,7 +12,7 @@ COPY apache2/sites-available/ /etc/apache2/sites-available/
 COPY apache-service.sh /etc/service/apache2/run
 RUN a2enmod rewrite expires headers proxy proxy_http ssl
 RUN a2enconf security s3-proxy vhost_app
-ENV COMPOSER_HOME="/tmp/.composer/"
+ENV COMPOSER_HOME="/.composer/"
 
 # Container start scripts
 COPY my_init.d/* /etc/my_init.d/

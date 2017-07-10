@@ -7,11 +7,11 @@
 
 # soft fail if we simply don't have a password.
 if [[ -z "${DRUPAL_DB_PASSWORD_ENCRYPTED}" ]]; then
-  echo "DRUPAL_DB_PASSWORD not set, skipping decryption."
-  exit 1
+  echo "DRUPAL_DB_PASSWORD_ENCRYPTED not set, skipping decryption."
+  exit 0
 fi
 # hard fail if we have a password, but not the other required variables.
-if [[ -z "${DRUPAL_DB_PASSWORD_ENCRYPTED}" || -z "${APPLICATION}" ]]; then
+if [[ -z "${DRUPAL_DB_NAME}" || -z "${APPLICATION}" ]]; then
   echo "DRUPAL_DB_NAME or APPLICATION not set, decryption failed."
   exit 1
 fi
@@ -28,5 +28,5 @@ if [[ -z "${PASS}" ]]; then
   exit 1
 fi
 
-echo "export DRUPAL_DB_PASSWORD=\"${PASS}\"" >> /etc/container_environment.sh
+echo "${PASS}" >> /etc/container_environment/DRUPAL_DB_PASSWORD
 export DRUPAL_DB_PASSWORD="${PASS}"

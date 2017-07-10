@@ -4,7 +4,7 @@ set -ex
 add-apt-repository ppa:ondrej/php
 add-apt-repository ppa:certbot/certbot
 apt-get update
-apt-get install -y \
+apt-get install --no-install-recommends -y \
     wget \
     curl \
     zip \
@@ -22,8 +22,9 @@ apt-get install -y \
     php7.1-mysql \
     php7.1-readline \
     php7.1-zip \
+    mysql-client \
 ;
-# get CA certificates (required by curl and the s3 reverse proxy)
+# get CA certificates for curl/openssl
 curl -sS https://curl.haxx.se/ca/cacert.pem > /etc/cacert.pem
 echo 'openssl.cafile="/etc/cacert.pem"' >> /etc/php-7.1.ini
 # Install composer
@@ -32,8 +33,8 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --fil
 echo "ServerName \${PRIMARY_DOMAIN}" >> /etc/apache2/apache2.conf;
 
 # Install the AWSCLI and Certbot
-apt-get install -y \
-    python2.7 \
+apt-get install --no-install-recommends -y \
+    python2.7-minimal  \
     python-pip \
     awscli \
     python-certbot-apache \
@@ -57,7 +58,10 @@ echo "
        " >> /etc/php/7.1/apache2/php.ini
 
 # Install xdebug
-apt-get install -y php7.1-dev
+apt-get install --no-install-recommends -y \
+  php7.1-dev \
+  build-essential \
+;
 cd /tmp/
 wget http://xdebug.org/files/xdebug-2.5.0.tgz
 tar -xvzf xdebug-2.5.0.tgz
@@ -75,8 +79,8 @@ echo  "
     xdebug.remote_autostart=1
     xdebug.remote_handler=dbgp
     xdebug.remote_mode=req
-    " >> /etc/php/7.1/apache2/php.ini
-apt-get remove -y php7.1-dev
+    " >> /etc/php/7.1/apache2/conf.d/20-xdebug.ini
+apt-get remove -y php7.1-dev build-essential
 # END XDEBUG
 
 echo "

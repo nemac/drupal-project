@@ -86,7 +86,7 @@
  * );
  * @endcode
  */
-$databases = array();
+ $databases = array();
 
 /**
  * Customizing database settings.
@@ -295,7 +295,7 @@ $config_directories = array();
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = '';
+$settings['hash_salt'] = 'vdYpysFUz2Jo4hiKIA_rBMHjPObBPeCH3nMS7F3L8XWZ21nZlkOeg010EJK7rb46c2vOtXYPRw';
 
 /**
  * Deployment identifier.
@@ -540,7 +540,7 @@ if ($settings['hash_salt']) {
  * See https://www.drupal.org/documentation/modules/file for more information
  * about securing private files.
  */
-# $settings['file_private_path'] = '';
+ $settings['file_private_path'] = $app_root . '/../private';
 
 /**
  * Session write interval:
@@ -734,7 +734,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * example.org, with all subdomains included.
  */
 
-
 /**
  * The default list of directories that will be ignored by Drupal's file API.
  *
@@ -764,33 +763,47 @@ $settings['file_scan_ignore_directories'] = [
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
+$databases['default']['default'] = array (
+  'database' => getenv('DRUPAL_DB_NAME'),
+  'username' => getenv('DRUPAL_DB_USERNAME'),
+  'password' => getenv('DRUPAL_DB_PASSWORD'),
+  'prefix' => '',
+  'host' => getenv('DRUPAL_DB_HOSTNAME'),
+  'port' => '3306',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+);
+$settings['install_profile'] = 'standard';
 $config_directories['sync'] = '../config/sync';
 
-
-$databases['default']['default'] = [
-  'host' => $_ENV['DRUPAL_DB_HOSTNAME'],
-  'port' => $_ENV['DRUPAL_DB_PORT'],
-  'database' => $_ENV['DRUPAL_DB_NAME'],
-  'username' => $_ENV['DRUPAL_DB_USERNAME'],
-  'password' => $_ENV['DRUPAL_DB_PASSWORD'],
-  'driver' => 'mysql',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-  'prefix' => '',
-];
-
-
 // s3fs configuration
-$conf['s3fs_use_instance_profile'] = TRUE;
-$conf['s3fs_region'] = $_ENV['REGION'];
-$conf['s3fs_use_cname'] = TRUE;
-$conf['s3fs_domain'] = $_ENV['ASSET_STORE'] . '.s3.amazonaws.com';
-$conf['s3fs_use_customhost'] = false;
-$conf['s3fs_bucket'] = $_ENV['ASSET_STORE'];
-$conf['s3fs_root_folder'] = $_ENV['APPLICATION'];
-$conf['s3fs_use_s3_for_public'] = TRUE;
-$conf['s3fs_use_s3_for_private'] = TRUE;
-$conf['s3fs_no_rewrite_cssjs'] = FALSE;
-$conf['s3fs_presigned_urls'] = "300|private/*";
-$conf['s3fs_public_folder'] = 'public';
-$conf['s3fs_private_folder'] = 'private';
+if (!empty(getenv('ASSET_STORE'))) {
+
+  if (!empty(getenv('S3_SECRET_ACCESS_KEY')) && !empty(getenv('S3_ACCESS_KEY_ID'))){
+    $config['s3fs.settings']['access_key']=getenv('S3_ACCESS_KEY_ID');
+    $config['s3fs.settings']['secret_key']=getenv('S3_SECRET_ACCESS_KEY');
+  }
+  else {
+    $config['s3fs.settings']['s3fs_use_instance_profile'] = TRUE;
+  }
+  $assetStore = substr(getenv('ASSET_STORE'),5);
+  $bucket=substr( $assetStore,0, strpos($assetStore,'/'));
+  $prefix=substr( $assetStore,strpos($assetStore,'/') + 1);
+  $prefix=rtrim($prefix,"/");
+
+  $config['s3fs.settings']['region'] = getenv('REGION');
+  $config['s3fs.settings']['bucket'] = $bucket;
+  $config['s3fs.settings']['use_cname'] = false;
+  $config['s3fs.settings']['use_https'] = TRUE;
+  $config['s3fs.settings']['domain'] = 's3.amazonaws.com' ;
+  $config['s3fs.settings']['use_customhost'] = false;
+  $config['s3fs.settings']['root_folder'] = $prefix;
+  $config['s3fs.settings']['no_rewrite_cssjs'] = false;
+  $config['s3fs.settings']['presigned_urls'] = "";
+  $config['s3fs.settings']['public_folder'] = 'public';
+  $config['s3fs.settings']['private_folder'] = 'private';
+  $settings['s3fs.use_s3_for_private'] = true;
+  $settings['s3fs.use_s3_for_public'] = true;
+}
+$settings['php_storage']['twig']['directory'] = '../twig/';
 

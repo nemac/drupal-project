@@ -6,7 +6,7 @@ if [[ "${APP_CONTAINER}" == "" ]]; then
   echo "App Container not running. Exiting."
   exit 1
 fi;
-
+(
 set -ex
-
-docker exec -it "${APP_CONTAINER}" /bin/bash
+docker exec -it "${APP_CONTAINER}" /bin/bash "$@"
+)

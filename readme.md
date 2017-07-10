@@ -87,4 +87,12 @@ Adding your public key in `.ebextensions/keys.config` where indicated will allow
 ### Further Reading:
 [Drupal w/ Composer project docs](https://github.com/drupal-composer/drupal-project)
 [Composer Docs](https://getcomposer.org/doc/)
-[Drush commands](https://drushcommands.com/drush-9x/)
+[Drush commands](https://drushcommands.com/drush-8x/)
+[Workflow for configuration sync between environments using the web interface](https://www.drupal.org/node/2416545)
+[Workflow for configuration sync between environments using git](http://nuvole.org/blog/2014/aug/20/git-workflow-managing-drupal-8-configuration)
+
+# TODO register drupal CRON
+# TODO register ssl cert renewal CRON
+# TODO Setup caching engine
+# TODO encrypt hash salts using KMS
+# TODO encrypt ssl certs using KMS data keys

@@ -7,6 +7,7 @@ if [[ "${APP_CONTAINER}" == "" ]]; then
   exit 1
 fi;
 
-set -ex
-
-docker exec --user www-data -t "${APP_CONTAINER}" /bin/bash -c "cd /app && composer $@"
+(
+set -x
+docker exec --user www-data -t "${APP_CONTAINER}" /bin/bash -c "cd /app && composer ${*}"
+)
