@@ -52,7 +52,7 @@
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-        "settings-shim":"chmod 660 web/sites/default/settings.php && echo \"<?php require(\$app_root . '/settings.php');\" > web/sites/default/settings.php",
+        "settings-shim": "chmod 660 web/sites/default/settings.php && echo \"<?php require(\\$app_root . '/settings.php');\" > web/sites/default/settings.php",
         "pre-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion",
             "mkdir -p web/core web/libraries web/modules/contrib web/profiles/contrib web/themes/contrib drush/contrib"
