@@ -1,12 +1,12 @@
 {
-    "name": "drupal-composer/drupal-project",
-    "description": "Project template for Drupal 8 projects with composer",
+    "name": "nemac/nemac-drupal-project",
+    "description": "",
     "type": "project",
-    "license": "GPL-2.0+",
+    "license": "PROPRIETARY",
     "authors": [
         {
-            "name": "",
-            "role": ""
+            "name": "Joshua Wilson",
+            "email": "jwilson@waystone.systems"
         }
     ],
     "repositories": [
@@ -19,8 +19,11 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.2",
+        "drupal/config_installer": "^1.4",
         "drupal/console": "~1.0",
         "drupal/core": "~8.0",
+        "drupal/features": "^3.5",
+        "drupal/s3fs": "^3.0@alpha",
         "drush/drush": "~8.0",
         "webflo/drupal-finder": "^0.3.0",
         "webmozart/path-util": "^2.3"
@@ -49,17 +52,23 @@
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "settings-shim": "chmod 660 web/sites/default/settings.php && echo \"<?php require(dirname(\\$app_root) . '/settings.php');\" > web/sites/default/settings.php",
         "pre-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion",
+            "mkdir -p web/core web/libraries web/modules/contrib web/profiles/contrib web/themes/contrib drush/contrib"
         ],
         "pre-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
         ],
         "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "@drupal-scaffold",
+            "@settings-shim"
         ],
         "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "@drupal-scaffold",
+            "@settings-shim"
         ]
     },
     "extra": {

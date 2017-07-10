@@ -21,21 +21,29 @@ services:
       - "443:443"
     restart: always
     volumes:
-      - $PWD:/app
+      - ${PROJECT_DIR}:/app
+      - composer_cache:/.composer
     environment:
-      SECRETS_STORE: ''
-      ASSET_STORE: ''
-      S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY}'
-      S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID}'
+      SECRETS_STORE: 'nemac-secrets-us-east-1/cohesivefire-nemac-org/'
+      ASSET_STORE: 'nemac-assets-us-east-1/cohesivefire-nemac-org/'
+      REGION: 'us-east-1'
       PHP_DATE_TIMEZONE: 'America/New_York'
       PHP_MEMORY_LIMIT: '512M'
       PHP_POST_MAX_SIZE: '64M'
       PHP_UPLOAD_MAX_FILESIZE: '64M'
       PHP_MAX_EXECUTION_TIME: '120'
-      PROJECT_HOSTNAME: '${PROJECT_HOSTNAME}'
+      PRIMARY_DOMAIN: 'drupal.localhost'
+      DRUPAL_DB_HOSTNAME: 'db'
+      DRUPAL_DB_USERNAME: 'drupal'
+      DRUPAL_DB_PASSWORD: 'drupal'
+      DRUPAL_DB_NAME: 'drupal'
+      DRUPAL_DB_PORT: '3306'
       ENABLE_DEBUGGING: 'true'
       ENABLE_HTTPS: 'false'
       XDEBUG_REMOTE_HOST: '192.168.99.1'
-      ADMIN_EMAIL: 'admin@$PROJECT_HOSTNAME'
+      ADMIN_EMAIL: 'admin@drupal.localhost'
+      S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY}'
+      S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID}'
 volumes:
   db_data:
+  composer_cache:

@@ -38,8 +38,8 @@ The below environment variables may be configured in `docker-compose.yml`(for de
 
  Name | Type | Description
  :--- | :--- | :---
-PROJECT_HOSTNAME | Hostname | The primary hostname for this environment. Ex: 'some.project.com'
-PROJECT_CNAMES | Hostnames | Additional hostnames for which https certificates should be registered (comma-seperated).
+PRIMARY_DOMAIN | Hostname | The primary domain name for this environment. Ex: 'some.project.com' 
+ALTERNATE_DOMAINS | Hostnames | Additional domain names/CNAMES for which https certificates should be registered (comma-seperated).
 ADMIN_EMAIL | Email | The email used to register ssl certs. May receive ssl cert expiry notices.
 SECRETS_STORE | S3 bucket/prefix | The S3 bucket and prefix in which the secrets for this environment are stored. Ex: 's3://nemac-secrets/staging-some-project-com/')
 ASSET_STORE | S3 bucket/prefix | The S3 bucket and prefix in which the assets for this environment are stored. Ex: 's3://nemac-assets-us-east-1/some-project-com/')
@@ -50,6 +50,10 @@ XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this
 
 
 ## Local Development
+
+
+(defaults to drupal.local)
+Add `127.0.0.1 PRIMARY_DOMAIN` to your hosts for local development.
 
 ### Setup
 
@@ -63,17 +67,32 @@ Run `source utils.sh` to load utility commands.
 * **dps** - Lists running docker containers.
 * **dlog** - Shows log output from current running app container.
 * **dbash** - Interactive terminal in running app container.
+* **drush** - Runs `drush` in running app container.
+* **composer** - Runs `composer` in running app container.
 * **build-image** - Build the docker image locally.
-* **push-image** - Pushes the docker image to the image repository with the provided tag.
-
-
+* **checkout-image** - Pulls specified docker image version from the ECR repository and tags it for use in local development environment.
+* **push-image** - Pushes current local development image to AWS ECR repository with the specified version tag.
 
 ### <span id="debugging"></span> Debugging
 
 
 ### SSH
-Adding your public key in `.ebextensions/keys.config` where indicated will allow you to ssh into instances using `ssh ec2-user@instancehostname`. Once connected logs can be found in `/var/log/`, deployed application source is visible at `/var/app/current/` and running `dbash` will get you an interactive terminal in the current running app container. `dps` gives some stats on how long it has been running.
+Adding your public key in `.ebextensions/keys.config` where indicated will allow you to ssh into instances using `ssh ec2-user@instancehostname`. Once connected, logs can be found in `/var/log/`, deployed application source is visible at `/var/app/current/` and running `dbash` will get you an interactive terminal in the current running app container. `dps` gives some stats on how long it has been running. If no container is running `dps` will show only the "ecs-agent" container, at which point logs from failed containers can be found in `/var/log/containers`.
 
 ### Gotchas
 
-- If you encounter errors about files not existing in `/vendor`, destroy it, then re-run `drun`. Do not attempt to troubleshoot permissions.
+- If you encounter errors about files not existing in `/vendor`, destroy it, then re-run `drun` as this indicates a failed composer install.
+- Because multiple projects are using the same docker image repository, changes for a single project should be pushed with a prefix for that project (Ex: `cohesivefire-1.04`) and `Dockerrun.aws.json` should be updated to use that image.
+
+### Further Reading:
+[Drupal w/ Composer project docs](https://github.com/drupal-composer/drupal-project)
+[Composer Docs](https://getcomposer.org/doc/)
+[Drush commands](https://drushcommands.com/drush-8x/)
+[Workflow for configuration sync between environments using the web interface](https://www.drupal.org/node/2416545)
+[Workflow for configuration sync between environments using git](http://nuvole.org/blog/2014/aug/20/git-workflow-managing-drupal-8-configuration)
+
+# TODO register drupal CRON
+# TODO register ssl cert renewal CRON
+# TODO Setup caching engine
+# TODO encrypt hash salts using KMS
+# TODO encrypt ssl certs using KMS data keys
