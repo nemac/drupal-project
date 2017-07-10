@@ -52,7 +52,7 @@ XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this
 ## Local Development
 
 
-(defaults to drupal.localhost)
+(defaults to drupal.local)
 Add `127.0.0.1 PRIMARY_DOMAIN` to your hosts for local development.
 
 ### Setup
