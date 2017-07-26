@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-
 # if we are in the container, just call drush.
-if [[ -h "/app/vendor/bin/drush" ]]; then
-cd /app/web && /app/vendor/bin/drush $@
+if [[ -e "/app/vendor/bin/drush" ]]; then
+
+source /etc/container_environment.sh
+set -x
+/app/vendor/bin/drush --root=/app/web "$@"
 exit 0;
 fi
 
@@ -21,5 +23,5 @@ for i in "$@"; do
 done
 DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 set -x;
-$DIR/dbash.sh -c "cd /app/web && /app/vendor/bin/drush $C"
+docker exec --user apache -it "${APP_CONTAINER}" /bin/bash -c "/app/scripts/drush.sh $C"
 

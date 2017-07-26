@@ -8,7 +8,8 @@ This project provides scaffolding to build a containerized Drupal webserver.
 
 * **.ebextensions/** - Files run when deploying the application to Elastic Beanstalk
 * **docker/** - Files used to build the docker image which runs the webserver.
-* **docker/apache2/** - Apache2 config files.
+* **docker/httpd/** - Apache2 config files.
+* **docker/service/** - Services to run and monitor in the container.
 * **docker/my_init.d/** - Scripts to run when the container first starts.
 * **web/** - The webroot in which Drupal is installed.
 * **docker-compose.yml/** - Config for running development environment locally.
@@ -16,21 +17,37 @@ This project provides scaffolding to build a containerized Drupal webserver.
 * **composer.json/** - Dependencies to install via composer.
 * **composer.lock/** - Dependencies resolved via composer. Commit this to ensure that Composer doesn't automatically upgrade dependencies in staging/production environments. Run `composer update` in local development environment to rebuild.
 
+### Webserver Stack Overview
+- Orchestration: CloudFormation
+- Version Control: Git
+- Deployment: Codepipeline
+- Environment manager: Elastic Beanstalk 
+  - Instance: EC2 (Amazon Linux)
+    - Application Docker container (image built from `/docker`)
+      - OS: Centos 7
+        - Runtimes: 
+          - Apache 2.4.6 
+          - PHP 7.1 (fpm)
+          - Python 2.7.5 (built into Centos 7)
+        - Services: 
+          - Drupal
+            - Static Asset Offloading: s3 / Drupal s3fs
+            - Dependency management: Composer
+          - Cron
+            - Certbot for registering/renewal of SSL Certs
+            - Drupal Cronjobs
+- Monitoring/logging locations:
+  - Instance: 
+    - Monitoring: Elastic Beanstalk / EC2
+    - Logging: /var/logs (Enable log streaming via Elastic Beanstalk for debugging/archival purposes)
+  - Container: ECS
+  - Database: RDS
+
 ## Local Development
 
 ### Setup
 
 ### Usage
-
-### Utility Commands
-Run `source utils.sh` to load utility commands.
-
-* **drun** - Runs the local development environment. (usually preceded by `image-build`)
-* **dps** - Lists running docker containers.
-* **dlog** - Shows log output from current running app container.
-* **dbash** - Interactive terminal in running app container.
-* **build-image** - Build the docker image locally.
-* **push-image** - Pushes the docker image to the image repository with the provided tag.
 
 ### Configuration
 The below environment variables may be configured in `docker-compose.yml`(for dev environment), `Dockerrun.aws.json`(for staging and production), and/or via the Elastic Beanstalk environment configuration. Elastic Beanstalk environment variables overwrite those defined in `Dockerrun.aws.json`, using this you can change variables on a running environment without pushing new code.
@@ -54,24 +71,26 @@ XDEBUG_REMOTE_HOST|IP|IP that XDEBUG should connect to. For dev environment this
 Add `127.0.0.1 PRIMARY_DOMAIN` to your hosts for local development.
 
 ### Setup
-<!-- TODO document docker setup -->
+<!-- TODO document docker setup on OSX -->
 
 
 ### Utility Commands
 Run `source commands.sh` to load utility commands.
 
 **Image management commands:**
-  **build-image** - build the docker image for local use
-  **checkout-image** - build the docker image for local use
+  **build-image** - Build the docker image for local use.
+  **pull-image** - Pull the docker image from ECR for local use.
   **push-image** - Pushes current local development image to AWS ECR repository with the specified version tag.
+  
 **Local development container commands:**
-  **drun** - list Docker containers
-  **dps** - list running Docker containers
-  **dbash** - open a terminal in running app container
-  **dlog** - view running app container's stdouterr output
-  **dtail** - follow running app container's stdouterr output
-  **alog** - view running app container's apache2 error log
-  **atail** - follow running app container's error log
+  **drun** - List Docker containers.
+  **dps** - List running Docker containers.
+  **dbash** - Open a terminal in running app container.
+  **dlog** - View running app container's stdout output.
+  **dtail** - Follow running app container's stdout output.
+  **alog** - View running app container's apache2 error log.
+  **atail** - Follow running app container's error log.
+  
 **Utility commands:**
   **drush** - Runs \`drush\` in running app container.
   **composer** - Runs \`composer\` in running app container.
@@ -96,7 +115,6 @@ Adding your public key in `.ebextensions/keys.config` where indicated will allow
 [Workflow for configuration sync between environments using the web interface](https://www.drupal.org/node/2416545)
 [Workflow for configuration sync between environments using git](http://nuvole.org/blog/2014/aug/20/git-workflow-managing-drupal-8-configuration)
 
-# TODO register drupal CRON
 # TODO register ssl cert renewal CRON
 # TODO encrypt hash salts using KMS
 # TODO encrypt ssl certs using KMS data keys

@@ -12,28 +12,27 @@ alias dtail="docker-compose logs -f app"
 alias drun="`pwd`/scripts/drun.sh"
 alias build-image="`pwd`/scripts/build-image.sh"
 alias push-image="`pwd`/scripts/push-image.sh"
-alias checkout-image="`pwd`/scripts/checkout-image.sh"
+alias pull-image="`pwd`/scripts/pull-image.sh"
 alias composer="`pwd`/scripts/composer.sh"
 alias drush="`pwd`/scripts/drush.sh"
 alias sql-dump="`pwd`/scripts/sql-dump.sh"
 alias sql-import="`pwd`/scripts/sql-import.sh"
-alias alog="`pwd`/scripts/dbash.sh -c \"less /var/log/apache2/error.log\""
-alias atail="`pwd`/scripts/dbash.sh -c \"tail -f /var/log/apache2/error.log\""
 
-echo -e "\nImage management commands:"
-echo -e "  build-image - build the docker image for local use"
-echo -e "  checkout-image - build the docker image for local use"
-echo -e "  push-image - Pushes current local development image to AWS ECR repository with the specified version tag."
-echo -e "\nLocal development container commands:"
-echo -e "  drun - list Docker containers"
-echo -e "  dps - list running Docker containers"
-echo -e "  dbash - open a terminal in running app container"
-echo -e "  dlog - view running app container's stdouterr output"
-echo -e "  dtail - follow running app container's stdouterr output"
-echo -e "  alog - view running app container's apache2 error log"
-echo -e "  atail - follow running app container's error log"
-echo -e "\nUtility commands:"
-echo -e "  drush - Runs \`drush\` in running app container."
-echo -e "  composer - Runs \`composer\` in running app container."
-echo -e "  sql-dump - Runs \`drush sql-dump\` in running app container."
-echo -e "  sql-import - Imports sql dump from file using drush."
+# This is mirrored in the readme, if you change it here change it there for consistency.
+cat <<- EOM
+Image management commands:
+  build-image - Build the docker image for local use
+  pull-image - Pulls specified docker image version from the ECR repository for local development.
+  push-image - Pushes current local development image to AWS ECR repository with the specified version tag.
+Local development container commands:
+  drun - List Docker containers
+  dps - Lists running docker containers.
+  dbash - Open a terminal in running app container
+  dlog - View running app container's stdouterr output
+  dtail - Follow running app container's stdouterr output
+Utility commands:
+  drush - Runs \`drush\` in running app container.
+  composer - Runs \`composer\` in running app container.
+  sql-dump - Runs \`drush sql-dump\` in running app container.
+  sql-import - Imports sql dump from file using drush.
+EOM

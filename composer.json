@@ -1,81 +1,66 @@
 {
-    "name": "nemac/nemac-drupal-project",
-    "description": "",
-    "type": "project",
-    "license": "PROPRIETARY",
-    "authors": [
-        {
-            "name": "Joshua Wilson",
-            "email": "jwilson@waystone.systems"
-        }
-    ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        }
-    ],
-    "require": {
-        "composer/installers": "^1.2",
-        "cweagans/composer-patches": "^1.6",
-        "drupal-composer/drupal-scaffold": "^2.2",
-        "drupal/config_installer": "^1.4",
-        "drupal/console": "~1.0",
-        "drupal/core": "~8.0",
-        "drupal/features": "^3.5",
-        "drupal/s3fs": "^3.0@alpha",
-        "drush/drush": "~8.0",
-        "webflo/drupal-finder": "^0.3.0",
-        "webmozart/path-util": "^2.3"
-    },
-    "require-dev": {
-        "behat/mink": "~1.7",
-        "behat/mink-goutte-driver": "~1.2",
-        "jcalderonzumba/gastonjs": "~1.0.2",
-        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
-        "mikey179/vfsstream": "~1.2",
-        "phpunit/phpunit": ">=4.8.28 <5",
-        "symfony/css-selector": "~2.8"
-    },
-    "conflict": {
-        "drupal/drupal": "*"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-      "sort-packages": true
-    },
-    "autoload": {
-        "classmap": [
-            "scripts/composer/ScriptHandler.php"
-        ]
-    },
-    "scripts": {
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-        "pre-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion",
-            "mkdir -p web/core web/libraries web/modules/contrib web/profiles/contrib web/themes/contrib drush/contrib"
-        ],
-        "pre-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "@drupal-scaffold"
-        ],
-        "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "@drupal-scaffold"
-        ]
-    },
-    "extra": {
-        "installer-paths": {
-            "web/core": ["type:drupal-core"],
-            "web/libraries/{$name}": ["type:drupal-library"],
-            "web/modules/contrib/{$name}": ["type:drupal-module"],
-            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "web/themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/contrib/{$name}": ["type:drupal-drush"]
-        }
+  "name": "nemac/drupal-project",
+  "description": "",
+  "type": "project",
+  "license": "PROPRIETARY",
+  "authors": [
+    {
+      "name": "Joshua Wilson",
+      "email": "jwilson@waystone.systems"
     }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/7"
+    },
+    {
+      "type": "vcs",
+      "url": "https://git.drupal.org/project/s3fs"
+    }
+  ],
+  "require": {
+    "composer/installers": "^1.2",
+    "cweagans/composer-patches": "^1.6",
+    "drush/drush": "~8.0",
+    "drupal/s3fs":"dev-7.x-3.x"
+  },
+  "config": {
+    "vendor-dir": "./vendor",
+    "sort-packages": true
+  },
+  "require-dev": {
+  },
+  "conflict": {
+    "drupal/core": "*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "index-shim": "target='web/index.php'; chmod -f o+w $target; cp -f index.php $target",
+    "settings-shim": "target='web/sites/default/settings.php'; chmod -f o+w $target; echo '<?php require(DRUPAL_ROOT. \"/../settings.php\");' > web/sites/default/settings.php",
+    "s3fs-mangle": "sed -i -e 's/composer_manager_register_autoloader();//g' web/sites/all/modules/contrib/s3fs/s3fs.module && sed -i -e 's/dependencies\\[\\] = composer_manager//g' web/sites/all/modules/contrib/s3fs/s3fs.info",
+    "pre-install-cmd": [],
+    "pre-update-cmd": [],
+    "post-install-cmd": [
+      "@index-shim",
+      "@settings-shim",
+      "@s3fs-mangle"
+    ],
+    "post-update-cmd": [
+      "@index-shim",
+      "@settings-shim",
+      "@s3fs-mangle"
+    ]
+  },
+  "extra": {
+    "installer-paths": {
+      "web/libraries/{$name}": ["type:drupal-library"],
+      "web/sites/all/modules/contrib/{$name}": ["type:drupal-module"],
+      "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+      "web/themes/contrib/{$name}": ["type:drupal-theme"],
+      "web/modules/custom/{$name}": ["type:drupal-custom-module"],
+      "web/themes/custom/{$name}": ["type:drupal-custom-theme"]
+    }
+  }
 }

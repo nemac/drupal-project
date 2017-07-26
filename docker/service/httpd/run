@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+exec 2>&1
+
+source /etc/container_environment.sh
+
+exec httpd -f /etc/httpd/httpd.conf -D FOREGROUND

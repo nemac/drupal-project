@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+exec 2>&1
+
+source /etc/container_environment.sh
+
+exec php-fpm -y /etc/php-fpm.conf -c /etc/php/php.ini --nodaemonize 2>&1

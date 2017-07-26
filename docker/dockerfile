@@ -1,20 +1,27 @@
-FROM phusion/baseimage:0.9.21
+FROM waystonesystems/baseimage-centos:0.1.0
 
 VOLUME /app
 VOLUME /secrets
 
-# Install Apache, PHP, Python, the AWS CLI and some other tools we need
-COPY build.sh /build/build.sh
-RUN /build/build.sh
-# Apache configuration
-COPY apache2/conf-available/ /etc/apache2/conf-available/
-COPY apache2/sites-available/ /etc/apache2/sites-available/
-COPY apache-service.sh /etc/service/apache2/run
-RUN a2enmod rewrite expires headers proxy proxy_http ssl
-RUN a2enconf security s3-proxy vhost_app
-ENV COMPOSER_HOME="/.composer"
+ENV ENABLE_DEBUGGING 'false'
+ENV COMPOSER_HOME="/opt/.composer"
+ENV PRIMARY_DOMAIN="drupal.local"
+ENV container docker
 
-# Container start scripts
-COPY my_init.d/* /etc/my_init.d/
+# Install Apache, PHP, Python, the AWS CLI and some other tools we need
+COPY install.sh /docker/install.sh
+RUN /docker/install.sh
+# Setup utility commands
+COPY commands.sh /docker/commands.sh
+RUN /docker/commands.sh
+# Configs
+COPY httpd /etc/httpd
+COPY service /etc/service
+COPY my_init.d /etc/my_init.d
+COPY configs.sh /docker/configs.sh
+RUN /docker/configs.sh
+
 
 CMD ["/sbin/my_init"]
+
+#CMD ["/usr/sbin/runit-init"]

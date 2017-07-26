@@ -29,7 +29,7 @@
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:1.00",
+      "image": "104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:1.01",
       "memoryReservation": "64",
       "environment": [
         {"name": "PHP_MEMORY_LIMIT", "value": "512M"},
@@ -67,7 +67,7 @@
         },
         {
           "sourceVolume": "composer-cache",
-          "containerPath": "/.composer",
+          "containerPath": "/opt/.composer",
           "readOnly": false
         }
       ],

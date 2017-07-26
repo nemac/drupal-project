@@ -8,5 +8,6 @@ if [[ "${APP_CONTAINER}" == "" ]]; then
 fi;
 (
 set -ex
+
 docker exec -it "${APP_CONTAINER}" /bin/bash "$@"
 )

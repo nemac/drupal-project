@@ -12,7 +12,7 @@ if [[ -z "${DRUPAL_DB_PASSWORD_ENCRYPTED}" ]]; then
 fi
 # hard fail if we have a password, but not the other required variables.
 if [[ -z "${DRUPAL_DB_NAME}" || -z "${PROJECT_STACK}" ]]; then
-  echo "DRUPAL_DB_NAME or ProjectStack not set, decryption failed."
+  echo "DRUPAL_DB_NAME or PROJECT_STACK not set, decryption failed."
   exit 1
 fi
 

@@ -9,5 +9,5 @@ fi;
 
 (
 set -x
-docker exec --user www-data -t "${APP_CONTAINER}" /bin/bash -c "cd /app && composer ${*}"
+docker exec --user apache -it "${APP_CONTAINER}" /bin/bash -c "cd /app && composer ${*}"
 )
