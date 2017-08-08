@@ -1,4 +1,4 @@
-FROM waystonesystems/baseimage-centos:0.1.0
+FROM waystonesystems/baseimage-centos:0.2.0
 
 VOLUME /app
 VOLUME /secrets

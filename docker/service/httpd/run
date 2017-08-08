@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
+
+# Redirect error output to stdout
 exec 2>&1
-
+# Load environment variables
 source /etc/container_environment.sh
-
+# Wait for syslog-ng
+sv start syslog-ng >/dev/null || exit 1
+# start apache with our config and don't let it detach from this process
 exec httpd -f /etc/httpd/httpd.conf -D FOREGROUND

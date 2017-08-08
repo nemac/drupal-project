@@ -1,5 +1,41 @@
 version: '3'
 services:
+  app:
+    depends_on:
+      - db
+    image: nemac-drupal:latest
+    ports:
+      # HostPort:GuestPort
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ${PROJECT_DIR}:/app
+      - composer_cache:/opt/.composer
+    # - ${PROJECT_DIR}/logs:/var/log # Uncomment to persist logs in your project directory.
+    environment:
+      PROJECT_STACK: ''
+      PRIMARY_DOMAIN: 'drupal.localhost'
+      ENABLE_HTTPS: 'false'
+      FORCE_HTTPS: 'false'
+      ADMIN_EMAIL: 'admin@drupal.localhost'
+      SECRETS_STORE: ''
+      ASSET_STORE: ''
+      AWS_DEFAULT_REGION: 'us-east-1'
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      ENABLE_DEBUGGING: 'true'
+      XDEBUG_REMOTE_HOST: '192.168.99.1'
+      PHP_DATE_TIMEZONE: 'America/New_York'
+      PHP_MEMORY_LIMIT: '512M'
+      PHP_POST_MAX_SIZE: '64M'
+      PHP_UPLOAD_MAX_FILESIZE: '64M'
+      PHP_MAX_EXECUTION_TIME: '120'
+      DRUPAL_DB_HOSTNAME: 'db'
+      DRUPAL_DB_USERNAME: 'drupal'
+      DRUPAL_DB_PASSWORD: 'drupal'
+      DRUPAL_DB_NAME: 'drupal'
+      DRUPAL_DB_PORT: '3306'
   db:
     image: mysql:5.7
     volumes:
@@ -12,39 +48,7 @@ services:
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
-  app:
-    depends_on:
-      - db
-    image: nemac-drupal:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
-    volumes:
-      - ${PROJECT_DIR}:/app
-      - composer_cache:/opt/.composer
-      - ${PROJECT_DIR}/logs:/var/log
-    environment:
-      SECRETS_STORE: ''
-      ASSET_STORE: ''
-      REGION: 'us-east-1'
-      PHP_DATE_TIMEZONE: 'America/New_York'
-      PHP_MEMORY_LIMIT: '512M'
-      PHP_POST_MAX_SIZE: '64M'
-      PHP_UPLOAD_MAX_FILESIZE: '64M'
-      PHP_MAX_EXECUTION_TIME: '120'
-      PRIMARY_DOMAIN: 'drupal.localhost'
-      DRUPAL_DB_HOSTNAME: 'db'
-      DRUPAL_DB_USERNAME: 'drupal'
-      DRUPAL_DB_PASSWORD: 'drupal'
-      DRUPAL_DB_NAME: 'drupal'
-      DRUPAL_DB_PORT: '3306'
-      ENABLE_DEBUGGING: 'true'
-      ENABLE_HTTPS: 'false'
-      XDEBUG_REMOTE_HOST: '192.168.99.1'
-      ADMIN_EMAIL: 'admin@drupal.localhost'
-      S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY}'
-      S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID}'
 volumes:
+  # These volumes can be cleared using `drun down -v`
   db_data:
   composer_cache:

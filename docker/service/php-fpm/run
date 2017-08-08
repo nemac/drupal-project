@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+#redirect error output to stdout
 exec 2>&1
-
+# load environment variables
 source /etc/container_environment.sh
-
+#start syslog-ng server if it hasn't already started
+sv start syslog-ng >/dev/null || exit 1
+# start php-fpm with specified configs and don't let it detach from this process.
 exec php-fpm -y /etc/php-fpm.conf -c /etc/php/php.ini --nodaemonize 2>&1
