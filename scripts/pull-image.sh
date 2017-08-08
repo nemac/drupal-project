@@ -2,7 +2,7 @@
 if [[ -z "$1" ]]
 then
     echo "Pulls specified docker image version from the ECR repository and tags it for use in local development environment."
-    echo "Usage: ./pull-image version_tag"
+    echo "Usage: ./pull-image <version_tag>"
     echo "Ex: pull-image 1.01"
     exit
 fi

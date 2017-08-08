@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ "$DIR" = "/usr/lcoal/bin" ]]; then
+if [[ "$DIR" = "/usr/local/bin" ]]; then
 DIR="/app/scripts"
 fi
 
 PROJECT_DIR="$(cd "${DIR}/.." && pwd)"
 
 if [[ -z $1 ]]; then
-echo "Usage: sql-import File"
+echo "Usage: sql-import <file>"
 echo "File path is relative to project dir. File extension must be .sql"
 exit 1
 fi

@@ -2,7 +2,8 @@
 if [[ -z "$1" ]]
 then
     echo "Pushes current local development image to AWS ECR repository with the specified version tag."
-    echo "Usage: push-image version_tag\nEx: push-image 1.01"
+    echo "Usage: push-image <version_tag>"
+    echo "Ex: push-image 1.01"
     echo "WARNING: Always push breaking changes with a new minor revision number!"
     echo "Running containers on Elastic Beanstalk automatically update to the newest image upon code deploy or container failure."
     exit
