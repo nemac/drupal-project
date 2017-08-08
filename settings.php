@@ -230,25 +230,6 @@
 $update_free_access = FALSE;
 
 /**
- * Salt for one-time login links, cancel links, form tokens, etc.
- *
- * This variable will be set to a random value by the installer. All one-time
- * login links will be invalidated if the value is changed. Note that if your
- * site is deployed on a cluster of web servers, you must ensure that this
- * variable has the same value on each server. If this variable is empty, a hash
- * of the serialized database credentials will be used as a fallback salt.
- *
- * For enhanced security, you may set this variable to the contents of a file
- * outside your document root; you should also ensure that this file is not
- * stored with backups of your database.
- *
- * Example:
- *   $drupal_hash_salt = file_get_contents('/home/example/salt.txt');
- *
- */
-$drupal_hash_salt = '1XEK4tNuc9yrVniCv0S3HBvh-wmG9dvdVT8bEsT_bfU';
-
-/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could
@@ -584,8 +565,20 @@ $settings['install_profile'] = 'standard';
 
 $conf['file_private_path'] = "../private";
 
-// s3fs configuration
-if (!empty(getenv('ASSET_STORE'))) {
+/**
+ * Salt for one-time login links, cancel links, form tokens, etc.
+ * We attempt to load this from secrets, failing that we generate a new one.
+ * Whenever a new token is generated all previous login/cancel links are invalidated.
+ *
+ * Note that the hash salt should not be kept with database dumps.
+ */
+$hash_salt_file = '/secrets/hash_salt';
+if (file_exists($hash_salt_file)) {
+  $drupal_hash_salt = file_get_contents($hash_salt_file);
+} else {
+  $drupal_hash_salt = drupal_hash_base64(drupal_random_bytes(55));
+  file_put_contents($hash_salt_file, $drupal_hash_salt);
+}
 
   if (!empty(getenv('S3_ACCESS_KEY_ID') && !empty(getenv('S3_SECRET_ACCESS_KEY')))){
     $conf['s3fs_awssdk_access_key']=getenv('S3_ACCESS_KEY_ID');
