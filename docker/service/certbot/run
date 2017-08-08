@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+
+#
+# Registers and maintains certificates using LetsEncrypt/Certbot.
+# See also: https://certbot.eff.org/docs/using.html
+#
+# This script is run when the container is first started (does not block httpd startup),
+#   waits for the primary domain's DNS to be pointed to this instance's public IP,
+#   registers/renews certs, and then schedules itself for regular re-runs.
+#
+# Note that because secrets (like SSL certs) are synced between instances,
+#   routing DNS to any one instance will allow all instances to use HTTPS.
+
+# Redirect error output to stdout
+exec 2>&1
+
+# Load environment variables
+source /etc/container_environment.sh
+# Wait for syslog-ng
+sv start syslog-ng >/dev/null || exit 1
+
+if [[ 'true' != "${ENABLE_HTTPS}" ]]; then
+  echo "HTTPS disabled. Skipping SSL certificate registration."
+  sv down certbot # Marks service default state as down for the lifetime of this container.
+  exit 0;
+fi
+
+if [[ -z "${PRIMARY_DOMAIN}" ]]; then
+  echo "No PRIMARY_DOMAIN configured. Skipping SSL certificate registration."
+  sv down certbot
+  exit 0;
+fi
+
+# Register certs with LetsEncrypt
+publicIP='';
+failedMetadataRequests=0
+getPublicIP() {
+  publicIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+  if [[ "$?" != 0 || -z "$publicIP" ]]; then
+    failedMetadataRequests=$((failedMetadataRequests+1))
+    #Wait 20 seconds, then recurse
+    sleep 20
+    getPublicIP
+  fi
+  # fail after 5 failed resolutions
+  if [[ $failedMetadataRequests -gt 5 ]]; then
+    echo 'EC2 metadata service unavailable. Skipping SSL certificate registration.'
+    sv down certbot
+    exit 0;
+  fi
+}
+
+# Resolves ip from DNS
+resolvedIP='';
+failedDNSRequests=0
+getResolvedIP(){
+  resolvedIP=$(getent hosts ${PRIMARY_DOMAIN} | head -1)
+  resolvedIP="${resolvedIP:0:16}"
+  resolvedIP="${resolvedIP//[[:blank:]]/}"
+  if [[ "$?" != 0 || -z "$publicIP" ]]; then
+    failedMetadataRequests=$((failedMetadataRequests+1))
+    #Wait 20 seconds, then recurse
+    sleep 20
+    getResolvedIP
+  fi
+  # fail after 40 failed resolutions (10min of no DNS)
+  if [[ $failedDNSRequests -gt 30 ]]; then
+    echo 'Too many failed DNS requests. SSL certificate registration failed.'
+    sv down certbot
+    exit 1;
+  fi
+  # Exit if resolved to localhost/127.0.0.1/::1
+  if [[ "$resolvedIP" -eq "localhost" || "$resolvedIP" -eq "127.0.0.1" || "$resolvedIP" -eq "::1" ]]; then
+    echo 'No cert registration available for localhost. Skipping SSL cert registration'
+    sv down certbot;
+    exit 0;
+  fi
+}
+
+waitForDNS(){
+  getPublicIP
+  getResolvedIP
+
+  if [[ "$resolvedIP" -eq "$publicIP" ]]; then
+  return
+  fi
+  echo "Waiting for ${PRIMARY_DOMAIN} to resolve to ${publicIP}..."
+  while [[ "$resolvedIP" -ne "$publicIP" ]]; do
+    getResolvedIP
+    sleep 60;
+  done
+}
+
+registerCertificates(){
+  echo " Attempting cert registration/renewal."
+
+  # Build list of cnames that should also be registered
+  cnames=""
+  ALTERNATE_DOMAINS=${ALTERNATE_DOMAINS// /}
+  for cname in ${ALTERNATE_DOMAINS//,/ }; do
+    cnames="$cnames -d $cname"
+  done
+
+  # Run certbot, get cert only (don't try to install), non-interactive mode, use existing webserver (apache) for challenge, keep existing certs if they are not near expiry, don't fail entirely if some domains can't be verified, backup certs on success.
+  certbot certonly \
+        -n \
+        --webroot \
+        --webroot-path '/app/web' \
+        --keep-until-expiring \
+        --allow-subset-of-names \
+        -d "${PRIMARY_DOMAIN}" \
+        ${cnames} \
+        --email "${ADMIN_EMAIL}" \
+        --agree-tos \
+        --post-hook "/etc/service/sync-secrets/sync-secrets.sh backup" \
+      ;
+}
+
+scheduleRenewal(){
+  cat >'/etc/cron.d/certbot' <<- 'EOM'
+      # This short cron file ensures that Certbot certificates are renewed
+      SHELL=/bin/bash
+      PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      # At 00:52 and 12:52 re-run service.
+      52 0,12 * * * root "sv start certbot"
+EOM
+}
+
+waitForDNS
+registerCertificates
+if [[ "$?" = 0 ]]; then
+  echo 'Certificate registration/renewal appears to have succeeded!'
+  scheduleRenewal
+else
+  # On failure wait two minutes and try again.
+  sleep 120
+  registerCertificates
+  if [[ "$?" = 0 ]]; then
+    echo 'Failed to register certificates. Review logs for more information.'
+    sv down certbot;
+    exit 1;
+  fi
+fi
