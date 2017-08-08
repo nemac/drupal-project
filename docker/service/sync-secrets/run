@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+#
+# Manages synchronization of secrets (SSL certs, hash salts, etc) with given secret store.
+#
+# This script is run when the container is first started, then schedules itself for regular (every 2 hours) re-syncs.
+#
+
+exec 2>&1
+# Load environment variables
+source /etc/container_environment.sh
+# Wait for syslog-ng
+sv start syslog-ng >/dev/null || exit 1
+
+if [[ -z "$SECRETS_STORE" ]]; then
+  echo "No SECRETS_STORE configured. Secrets like SSL certs and hash salts cannot be persisted across instances."
+  touch /etc/service/sync-secrets/down
+  sv down sync-secrets # Marks service default state as down for the lifetime of this container.
+  exit 0;
+fi
+
+./sync-secrets.sh sync
+
+# Schedule the service to start again later and exit.
+cat >'/etc/cron.d/sync-secrets' <<- 'EOM'
+# This short cron file ensures that secrets are synced regularly.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# At 58 minutes past the hour, every other hour, run start the sync service.
+50 */2 * * * root "sv start sync-secrets"
+EOM
+
+sv down sync-secrets
+exit 0
