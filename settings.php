@@ -81,7 +81,7 @@
  * );
  * @endcode
  */
- $databases = array();
+$databases = array();
 
 /**
  * Customizing database settings.
@@ -215,18 +215,6 @@
  * @endcode
  */
 
-
-/**
- * Access control for update.php script.
- *
- * If you are updating your Drupal installation using the update.php script but
- * are not logged in using either an account with the "Administer software
- * updates" permission or the site maintenance account (the account that was
- * created during installation), you will need to modify the access check
- * statement below. Change the FALSE to a TRUE to disable the access check.
- * After finishing the upgrade, be sure to open this file again and change the
- * TRUE back to a FALSE!
- */
 $update_free_access = FALSE;
 
 /**
@@ -309,27 +297,6 @@ ini_set('session.cookie_lifetime', 2000000);
 # $cookie_domain = '.example.com';
 
 /**
- * Variable overrides:
- *
- * To override specific entries in the 'variable' table for this site,
- * set them here. You usually don't need to use this feature. This is
- * useful in a configuration file for a vhost or directory, rather than
- * the default settings.php. Any configuration setting from the 'variable'
- * table can be given a new value. Note that any values you provide in
- * these variable overrides will not be modifiable from the Drupal
- * administration interface.
- *
- * The following overrides are examples:
- * - site_name: Defines the site's name.
- * - theme_default: Defines the default theme for this site.
- * - anonymous: Defines the human-readable name of anonymous users.
- * Remove the leading hash signs to enable.
- */
-# $conf['site_name'] = 'My Drupal site';
-# $conf['theme_default'] = 'garland';
-# $conf['anonymous'] = 'Visitor';
-
-/**
  * A custom theme can be set for the offline page. This applies when the site
  * is explicitly set to maintenance mode through the administration page or when
  * the database is inactive due to an error. It can be set through the
@@ -338,69 +305,6 @@ ini_set('session.cookie_lifetime', 2000000);
  * Note: This setting does not apply to installation and update pages.
  */
 # $conf['maintenance_theme'] = 'bartik';
-
-/**
- * Reverse Proxy Configuration:
- *
- * Reverse proxy servers are often used to enhance the performance
- * of heavily visited sites and may also provide other site caching,
- * security, or encryption benefits. In an environment where Drupal
- * is behind a reverse proxy, the real IP address of the client should
- * be determined such that the correct client IP address is available
- * to Drupal's logging, statistics, and access management systems. In
- * the most simple scenario, the proxy server will add an
- * X-Forwarded-For header to the request that contains the client IP
- * address. However, HTTP headers are vulnerable to spoofing, where a
- * malicious client could bypass restrictions by setting the
- * X-Forwarded-For header directly. Therefore, Drupal's proxy
- * configuration requires the IP addresses of all remote proxies to be
- * specified in $conf['reverse_proxy_addresses'] to work correctly.
- *
- * Enable this setting to get Drupal to determine the client IP from
- * the X-Forwarded-For header (or $conf['reverse_proxy_header'] if set).
- * If you are unsure about this setting, do not have a reverse proxy,
- * or Drupal operates in a shared hosting environment, this setting
- * should remain commented out.
- *
- * In order for this setting to be used you must specify every possible
- * reverse proxy IP address in $conf['reverse_proxy_addresses'].
- * If a complete list of reverse proxies is not available in your
- * environment (for example, if you use a CDN) you may set the
- * $_SERVER['REMOTE_ADDR'] variable directly in settings.php.
- * Be aware, however, that it is likely that this would allow IP
- * address spoofing unless more advanced precautions are taken.
- */
-# $conf['reverse_proxy'] = TRUE;
-
-/**
- * Specify every reverse proxy IP address in your environment.
- * This setting is required if $conf['reverse_proxy'] is TRUE.
- */
-# $conf['reverse_proxy_addresses'] = array('a.b.c.d', ...);
-
-/**
- * Set this value if your proxy server sends the client IP in a header
- * other than X-Forwarded-For.
- */
-# $conf['reverse_proxy_header'] = 'HTTP_X_CLUSTER_CLIENT_IP';
-
-/**
- * Page caching:
- *
- * By default, Drupal sends a "Vary: Cookie" HTTP header for anonymous page
- * views. This tells a HTTP proxy that it may return a page from its local
- * cache without contacting the web server, if the user sends the same Cookie
- * header as the user who originally requested the cached page. Without "Vary:
- * Cookie", authenticated users would also be served the anonymous page from
- * the cache. If the site has mostly anonymous users except a few known
- * editors/administrators, the Vary header can be omitted. This allows for
- * better caching in HTTP proxies (including reverse proxies), i.e. even if
- * clients send different cookies, they still get content served from the cache.
- * However, authenticated users should access the site directly (i.e. not use an
- * HTTP proxy, and bypass the reverse proxy if one is used) in order to avoid
- * getting cached pages from the proxy.
- */
-# $conf['omit_vary_cookie'] = TRUE;
 
 /**
  * CSS/JS aggregated file gzip compression:
@@ -497,24 +401,6 @@ $conf['image_allow_insecure_derivatives'] = TRUE;
 # drupal_fast_404();
 
 /**
- * External access proxy settings:
- *
- * If your site must access the Internet via a web proxy then you can enter
- * the proxy settings here. Currently only basic authentication is supported
- * by using the username and password variables. The proxy_user_agent variable
- * can be set to NULL for proxies that require no User-Agent header or to a
- * non-empty string for proxies that limit requests to a specific agent. The
- * proxy_exceptions variable is an array of host names to be accessed directly,
- * not via proxy.
- */
-# $conf['proxy_server'] = '';
-# $conf['proxy_port'] = 8080;
-# $conf['proxy_username'] = '';
-# $conf['proxy_password'] = '';
-# $conf['proxy_user_agent'] = '';
-# $conf['proxy_exceptions'] = array('127.0.0.1', 'localhost');
-
-/**
  * Authorized file system operations:
  *
  * The Update manager module included with Drupal provides a mechanism for
@@ -546,12 +432,7 @@ $conf['image_allow_insecure_derivatives'] = TRUE;
 $settings['file_chmod_directory'] = 0775;
 $settings['file_chmod_file'] = 0664;
 
-// We combine vendor directories but leave the config files separate to ensure composer_manager doesn't conflict with the master composer.json file.
-//$conf['composer_manager_vendor_dir'] = DRUPAL_ROOT . '/../vendor';
-//$conf['composer_manager_file_dir'] = DRUPAL_ROOT;
-
-error_log(getenv('DRUPAL_DB_NAME'));
-$databases['default']['default'] = array (
+$databases['default']['default'] = array(
   'database' => getenv('DRUPAL_DB_NAME'),
   'username' => getenv('DRUPAL_DB_USERNAME'),
   'password' => getenv('DRUPAL_DB_PASSWORD'),
@@ -580,20 +461,17 @@ if (file_exists($hash_salt_file)) {
   file_put_contents($hash_salt_file, $drupal_hash_salt);
 }
 
-  if (!empty(getenv('S3_ACCESS_KEY_ID') && !empty(getenv('S3_SECRET_ACCESS_KEY')))){
-    $conf['s3fs_awssdk_access_key']=getenv('S3_ACCESS_KEY_ID');
-    $conf['s3fs_awssdk_secret_key']=getenv('S3_SECRET_ACCESS_KEY');
-    $conf['s3fs_use_instance_profile'] = false;
-  }
-  else {
-    $conf['s3fs_use_instance_profile'] = true;
-  }
-  $assetStore =getenv('ASSET_STORE');
-  $bucket=substr( $assetStore,0, strpos($assetStore,'/'));
-  $prefix=substr( $assetStore,strpos($assetStore,'/') + 1);
-  $prefix=rtrim($prefix,"/");
+/** Asset offloading/s3fs configuration
+ * @see https://www.drupal.org/project/s3fs
+ * @see http://cgit.drupalcode.org/s3fs/tree/README.txt
+ */
+if (!empty(getenv('ASSET_STORE'))) {
+  $assetStore = getenv('ASSET_STORE');
+  $bucket = substr($assetStore, 0, strpos($assetStore, '/'));
+  $prefix = substr($assetStore, strpos($assetStore, '/') + 1);
+  $prefix = rtrim($prefix, "/");
 
-  $conf['s3fs_region'] = getenv('REGION');
+  $conf['s3fs_region'] = getenv('AWS_DEFAULT_REGION');
   $conf['s3fs_bucket'] = $bucket;
   $conf['s3fs_use_cname'] = false;
   $conf['s3fs_use_https'] = true;
@@ -606,4 +484,14 @@ if (file_exists($hash_salt_file)) {
   $conf['s3fs_private_folder'] = 'private';
   $conf['s3fs_use_s3_for_private'] = false;
   $conf['s3fs_use_s3_for_public'] = true;
+
+  // Use credentials from environment variables if provided.
+  if (!empty(getenv('AWS_ACCESS_KEY_ID') && !empty(getenv('AWS_SECRET_ACCESS_KEY')))) {
+    $conf['s3fs_awssdk_access_key'] = getenv('AWS_ACCESS_KEY_ID');
+    $conf['s3fs_awssdk_secret_key'] = getenv('AWS_SECRET_ACCESS_KEY');
+    $conf['s3fs_use_instance_profile'] = false;
+  }
+  else {
+    $conf['s3fs_use_instance_profile'] = true;
+  }
 }
