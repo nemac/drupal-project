@@ -29,21 +29,19 @@
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "arn:aws:ecr:us-east-1:104538610210:repository/nemac-drupal:1.00",
+      "image": "104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:d8-1.06",
       "memoryReservation": "64",
       "environment": [
         {"name": "PHP_MEMORY_LIMIT", "value": "512M"},
         {"name": "PHP_POST_MAX_SIZE", "value": "64M"},
         {"name": "PHP_UPLOAD_MAX_FILESIZE", "value": "64M"},
         {"name": "PHP_MAX_EXECUTION_TIME", "value": "120"},
-        {"name": "PROJECT_HOSTNAME", "value": "${PROJECT_HOSTNAME}"},
         {"name": "ENABLE_DEBUGGING", "value": "false"},
         {"name": "ENABLE_HTTPS", "value": "false"},
-        {"name": "ADMIN_EMAIL", "value": "admin@$PROJECT_HOSTNAME"},
+        {"name": "FORCE_HTTPS", "value": "false"},
+        {"name": "ADMIN_EMAIL", "value": "jwilson@waystone.systems"},
         {"name": "XDEBUG_REMOTE_HOST", "value": "127.0.0.1"},
-        {"name": "ADMIN_EMAIL", "value": ""},
-        {"name": "PHP_DATE_TIMEZONE", "value": "America/New_York"},
-        {"name": "COMPOSER_HOME", "value": "/.composer"}
+        {"name": "PHP_DATE_TIMEZONE", "value": "America/New_York"}
       ],
       "essential": true,
       "mountPoints": [
@@ -55,7 +53,7 @@
         {
           "sourceVolume": "secrets",
           "containerPath": "/secrets",
-          "readOnly": true
+          "readOnly": false
         },
         {
           "sourceVolume": "awseb-logs-app",
@@ -69,7 +67,7 @@
         },
         {
           "sourceVolume": "composer-cache",
-          "containerPath": "/.composer",
+          "containerPath": "/opt/.composer",
           "readOnly": false
         }
       ],

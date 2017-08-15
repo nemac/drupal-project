@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-pushd $DIR/../docker
-
-docker build . -t nemac-drupal-image "$@"
-popd
+cd $DIR/../docker
+docker image remove nemac-drupal:d8-latest
+docker build . -t nemac-drupal:d8-latest "$@"
