@@ -29,11 +29,9 @@ cat >> /etc/php.ini <<- 'EOM'
   upload_max_filesize = ${PHP_UPLOAD_MAX_FILESIZE}
   max_execution_time = ${PHP_MAX_EXECUTION_TIME}
   display_errors = ${ENABLE_DEBUGGING_BOOL}
-  error_log = \"/var/log/php.log\"
   expose_php = Off
   html_errors = Off
-  variables_order = \"EGPCS\"
-  session.save_path = \"/tmp\"
+  variables_order = "EGPCS"
   default_socket_timeout = 90
   short_open_tag = 1
   allow_url_fopen = On
