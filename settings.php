@@ -298,10 +298,10 @@ $settings['install_profile'] = 'standard';
 // We attempt to load this from secrets, failing that we generate a new one.
 $hash_salt_file = '/secrets/hash_salt';
 if (file_exists($hash_salt_file)) {
-  $drupal_hash_salt = file_get_contents($hash_salt_file);
+  $settings['hash_salt']  = file_get_contents($hash_salt_file);
 } else {
-  $drupal_hash_salt = drupal_hash_base64(drupal_random_bytes(55));
-  file_put_contents($hash_salt_file, $drupal_hash_salt);
+  $settings['hash_salt']  = \Drupal\Component\Utility\Crypt::hashBase64(\Drupal\Component\Utility\Crypt::randomBytes(55));
+  file_put_contents($hash_salt_file, $settings['hash_salt']);
 }
 /**
  * Deployment identifier.
@@ -744,7 +744,7 @@ $settings['entity_update_batch_size'] = 50;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-$setttings['skip_permissions_hardening']=true;
+$settings['skip_permissions_hardening']=true;
 $config_directories['sync'] = '../config/sync';
 $settings['php_storage']['twig']['directory'] = '../twig/';
 
@@ -784,11 +784,12 @@ if (!empty(getenv('ASSET_STORE'))) {
 
   // Use credentials from environment variables if provided.
   if (!empty(getenv('AWS_ACCESS_KEY_ID') && !empty(getenv('AWS_SECRET_ACCESS_KEY')))) {
-    $conf['s3fs_awssdk_access_key'] = getenv('AWS_ACCESS_KEY_ID');
-    $conf['s3fs_awssdk_secret_key'] = getenv('AWS_SECRET_ACCESS_KEY');
-    $conf['s3fs_use_instance_profile'] = false;
+    $config['s3fs_awssdk_access_key'] = getenv('AWS_ACCESS_KEY_ID');
+    $config['s3fs_awssdk_secret_key'] = getenv('AWS_SECRET_ACCESS_KEY');
+    $config['s3fs_use_instance_profile'] = false;
   }
   else {
-    $conf['s3fs_use_instance_profile'] = true;
+    $config['s3fs_use_instance_profile'] = true;
   }
 }
+
