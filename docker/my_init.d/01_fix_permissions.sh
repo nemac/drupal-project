@@ -15,7 +15,7 @@ else
 fi;
 
 chown -R apache:apache /secrets
-chmod -R o-r /secrets
+chmod -R ug+rw,o-rw /secrets
 
 # Log directories for apache and php-fpm
 mkdir -p /var/log/httpd

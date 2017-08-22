@@ -5,7 +5,6 @@ VOLUME /secrets
 
 ENV ENABLE_DEBUGGING 'false'
 ENV COMPOSER_HOME="/opt/.composer"
-ENV PRIMARY_DOMAIN="drupal.local"
 ENV container docker
 
 # Install Apache, PHP, Python, the AWS CLI and some other tools we need

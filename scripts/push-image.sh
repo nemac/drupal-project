@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
+set -e
 if [[ -z "$1" ]]
 then
     echo "Pushes current local development image to AWS ECR repository with the specified version tag."
     echo "Usage: push-image <version_tag>"
-    echo "Ex: push-image 1.01"
+    echo "Ex: push-image d7-1.06"
     echo "WARNING: Always push breaking changes with a new minor revision number!"
     echo "Running containers on Elastic Beanstalk automatically update to the newest image upon code deploy or container failure."
+
+    echo 'Here are the images in the AWS ECR repository:'
+
+    $(aws ecr get-login --region us-east-1 --no-include-email)
+    docker images 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal
     exit
 fi
 
-set -ex
-
 $(aws ecr get-login --region us-east-1 --no-include-email)
-docker tag nemac-drupal:latest 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1
+
+[[ "$?" -eq '0' ]] && echo 'AWS ECR login failed. You may need to update your AWS CLI or ensure that your credentials are set properly using `aws configure`'
+
+docker tag nemac-drupal:d7-latest 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1
 docker push 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal:$1

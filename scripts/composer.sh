@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 APP_CONTAINER=$(dcontainer)
-
 if [[ -z "${APP_CONTAINER}" ]]; then
   echo "App Container not running. Exiting."
   exit 1

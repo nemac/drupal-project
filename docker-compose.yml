@@ -3,7 +3,7 @@ services:
   app:
     depends_on:
       - db
-    image: nemac-drupal:latest
+    image: nemac-drupal:d7-latest
     ports:
       # HostPort:GuestPort
       - "80:80"
@@ -15,7 +15,7 @@ services:
     # - ${PROJECT_DIR}/logs:/var/log # Uncomment to persist logs in your project directory.
     environment:
       PROJECT_STACK: ''
-      PRIMARY_DOMAIN: 'drupal.localhost'
+      PRIMARY_DOMAIN: 'drupal.local'
       ENABLE_HTTPS: 'false'
       FORCE_HTTPS: 'false'
       ADMIN_EMAIL: 'admin@drupal.localhost'

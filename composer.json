@@ -1,6 +1,6 @@
 {
   "name": "nemac/drupal-project",
-  "description": "",
+  "description": "Project template for Drupal 7 projects with composer for module management",
   "type": "project",
   "license": "ISC",
   "authors": [
