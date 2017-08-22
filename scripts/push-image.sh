@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 if [[ -z "$1" ]]
 then
     echo "Pushes current local development image to AWS ECR repository with the specified version tag."
@@ -8,13 +9,11 @@ then
     echo "Running containers on Elastic Beanstalk automatically update to the newest image upon code deploy or container failure."
 
     echo 'Here are the images in the AWS ECR repository:'
-    set -ex
+
     $(aws ecr get-login --region us-east-1 --no-include-email)
     docker images 104538610210.dkr.ecr.us-east-1.amazonaws.com/nemac-drupal
     exit
 fi
-
-set -ex
 
 $(aws ecr get-login --region us-east-1 --no-include-email)
 
