@@ -298,9 +298,10 @@ $settings['install_profile'] = 'standard';
 // We attempt to load this from secrets, failing that we generate a new one.
 $hash_salt_file = '/secrets/hash_salt';
 if (file_exists($hash_salt_file)) {
-  $settings['hash_salt']  = file_get_contents($hash_salt_file);
-} else {
-  $settings['hash_salt']  = \Drupal\Component\Utility\Crypt::hashBase64(\Drupal\Component\Utility\Crypt::randomBytes(55));
+  $settings['hash_salt'] = file_get_contents($hash_salt_file);
+}
+else {
+  $settings['hash_salt'] = \Drupal\Component\Utility\Crypt::hashBase64(\Drupal\Component\Utility\Crypt::randomBytes(55));
   file_put_contents($hash_salt_file, $settings['hash_salt']);
 }
 /**
@@ -486,7 +487,7 @@ if ($settings['hash_salt']) {
  * See https://www.drupal.org/documentation/modules/file for more information
  * about securing private files.
  */
-$settings['file_private_path'] = $app_root . '/../private';
+$settings['file_private_path'] = dirname($app_root) . '/private';
 
 /**
  * Session write interval:
@@ -744,7 +745,7 @@ $settings['entity_update_batch_size'] = 50;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-$settings['skip_permissions_hardening']=true;
+$settings['skip_permissions_hardening'] = true;
 $config_directories['sync'] = '../config/sync';
 $settings['php_storage']['twig']['directory'] = '../twig/';
 
@@ -779,8 +780,8 @@ if (!empty(getenv('ASSET_STORE'))) {
   $config['s3fs.settings']['presigned_urls'] = "";
   $config['s3fs.settings']['public_folder'] = 'public';
   $config['s3fs.settings']['private_folder'] = 'private';
-  $settings['s3fs.use_s3_for_private'] = false;
-  $settings['s3fs.use_s3_for_public'] = false;
+  $settings['s3fs.use_s3_for_private'] = true;
+  $settings['s3fs.use_s3_for_public'] = true;
 
   // Use credentials from environment variables if provided.
   if (!empty(getenv('AWS_ACCESS_KEY_ID') && !empty(getenv('AWS_SECRET_ACCESS_KEY')))) {
@@ -793,3 +794,9 @@ if (!empty(getenv('ASSET_STORE'))) {
   }
 }
 
+if (!empty(getenv('PRIMARY_DOMAIN'))) {
+  $settings['trusted_host_patterns'] = ['^' . getenv('PRIMARY_DOMAIN') . '$'];
+  foreach (explode(',', getenv("ALTERNATE_DOMAINS")) as $cname) {
+    $settings['trusted_host_patterns'][] = '^' . $cname . '$';
+  }
+}
