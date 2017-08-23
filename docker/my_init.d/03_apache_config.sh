@@ -6,7 +6,7 @@
 #
 
 # Just changes 'true'/'false' to '0'/'1' for usage in config files.
-if [[ 'true' -eq "${ENABLE_DEBUGGING}" ]]; then
+if [[ 'true' == "${ENABLE_DEBUGGING}" ]]; then
   echo '1' >/etc/container_environment/ENABLE_DEBUGGING_BOOL
   # used by phpstorm/intellij to map xdebug cli connections to debugging server configurations
   echo 'serverName=drupal.local' >/etc/container_environment/PHP_IDE_CONFIG

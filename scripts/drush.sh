@@ -10,7 +10,6 @@ done
 # If we are in the container, just call drush.
 if [[ -e "/app/vendor/bin/drush" ]]; then
   source /etc/container_environment.sh
-  set -x
   if [[ "$USER" -eq "apache" ]]; then
     /app/vendor/bin/drush --root=/app/web $@
   else

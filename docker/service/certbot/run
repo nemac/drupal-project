@@ -70,7 +70,7 @@ getResolvedIP(){
     exit 1;
   fi
   # Exit if resolved to localhost/127.0.0.1/::1
-  if [[ "$resolvedIP" -eq "localhost" || "$resolvedIP" -eq "127.0.0.1" || "$resolvedIP" -eq "::1" ]]; then
+  if [[ "$resolvedIP" == "localhost" || "$resolvedIP" == "127.0.0.1" || "$resolvedIP" == "::1" ]]; then
     echo 'No cert registration available for localhost. Skipping SSL cert registration'
     sv down certbot;
     exit 0;
@@ -81,7 +81,7 @@ waitForDNS(){
   getPublicIP
   getResolvedIP
 
-  if [[ "$resolvedIP" -eq "$publicIP" ]]; then
+  if [[ "$resolvedIP" == "$publicIP" ]]; then
   return
   fi
   echo "Waiting for ${PRIMARY_DOMAIN} to resolve to ${publicIP}..."
